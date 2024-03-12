@@ -18,7 +18,3 @@ Nuance Bookstore is an e-commerce platform dedicated to providing a nuanced shop
 ## Work in Progress
 
 Nuance Bookstore is currently under development. Stay tuned for exciting updates and new features as we work towards creating the ultimate book shopping destination.
-
-## Contributing
-
-We welcome contributions to enhance Nuance Bookstore. Whether it's fixing bugs, implementing new features, or improving the user experience, your input is invaluable. Check out our [contribution guidelines](CONTRIBUTING.md) to get started.
