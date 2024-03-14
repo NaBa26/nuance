@@ -1,5 +1,6 @@
 package com.ecommerce.nuance.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ecommerce.nuance.exception.OrderNotFound;
+import com.ecommerce.nuance.exception.OrderNotFoundException;
 import com.ecommerce.nuance.model.Order;
+import com.ecommerce.nuance.model.User;
 import com.ecommerce.nuance.service.OrderService;
 
 @RestController
@@ -29,6 +31,11 @@ public class OrderController {
 	    public OrderController(OrderService orderService) {
 	        this.orderService = orderService;
 	    }
+	    
+	    @GetMapping
+	    public List<Order> getAllOrders() {
+			return orderService.getAllOrders();
+		}
 
 	    @GetMapping("/{orderId}")
 	    public Optional<Order> getOrderById(@PathVariable String orderId) {
@@ -42,7 +49,7 @@ public class OrderController {
 	    }
 
        @PutMapping("/{orderId}")
-       public Order updateOrder(@PathVariable long orderId, @RequestBody Order updatedOrder) throws OrderNotFound 
+       public Order updateOrder(@PathVariable long orderId, @RequestBody Order updatedOrder) throws OrderNotFoundException 
        {
        	return this.orderService.updateOrder(orderId, updatedOrder);
        }

@@ -1,10 +1,10 @@
 package com.ecommerce.nuance.exception;
 
-public class OrderNotFound extends Exception {
+public class OrderNotFoundException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 
-	public OrderNotFound(String message) {
+	public OrderNotFoundException(String message) {
 		super(message);
 	}
 	

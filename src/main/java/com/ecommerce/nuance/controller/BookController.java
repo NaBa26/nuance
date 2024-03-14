@@ -2,6 +2,7 @@ package com.ecommerce.nuance.controller;
 
 
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.nuance.exception.BookNotFoundException;
 import com.ecommerce.nuance.model.Book;
+import com.ecommerce.nuance.model.User;
 import com.ecommerce.nuance.service.BookService;
 
 @RestController 
@@ -31,6 +33,11 @@ public class BookController {
 	    public BookController(BookService bookService) {
 	        this.bookService = bookService;
 	    }
+	    
+	    @GetMapping
+	    public List<Book> getAllBooks() {
+			return bookService.getAllBooks();
+		}
 
 	    @GetMapping("/{bookId}")
 	    public Optional<Book> getBookById(@PathVariable String bookId) {
@@ -50,7 +57,7 @@ public class BookController {
         }
 
         @DeleteMapping("/{bookId}")
-        public ResponseEntity<HttpStatus> deleteBook(String bookId) 
+        public ResponseEntity<HttpStatus> deleteBook(@PathVariable String bookId) 
         {
         	try {
         		this.bookService.deleteBook(Long.parseLong(bookId));

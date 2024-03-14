@@ -23,6 +23,12 @@ public class BookServiceImpl implements BookService {
 	    this.bookRepository = bookRepository;
 	}
 	
+	
+	public List<Book> getAllBooks()
+	{
+		return bookRepository.findAll();
+	}
+	
 	public Optional<Book> getBookById(Long bookId)
 	{
 		return bookRepository.findById(bookId);

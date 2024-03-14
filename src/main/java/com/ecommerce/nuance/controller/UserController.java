@@ -1,5 +1,6 @@
 package com.ecommerce.nuance.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,11 @@ public class UserController {
 	    public UserController(UserService userService) {
 	        this.userService = userService;
 	    }
+	    
+	    @GetMapping
+	    public List<User> getAllUsers() {
+			return userService.getAllUsers();
+		}
 
 	    @GetMapping("/{userId}")
 	    public Optional<User> getUserById(@PathVariable String userId) {
@@ -48,7 +54,7 @@ public class UserController {
         }
 
         @DeleteMapping("/{userId}")
-        public ResponseEntity<HttpStatus> deleteUser(String userId) 
+        public ResponseEntity<HttpStatus> deleteUser(@PathVariable String userId) 
         {
         	try {
         		this.userService.deleteUser(Long.parseLong(userId));

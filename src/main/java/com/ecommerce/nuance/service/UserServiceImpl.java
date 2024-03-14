@@ -25,6 +25,12 @@ public class UserServiceImpl implements UserService {
 		this.userRepository = userRepository;
 	}
 	
+	public List<User> getAllUsers()
+	{
+		return userRepository.findAll();
+	}
+	
+	
 	public Optional<User> getUserById(Long userId) //can't use long, use Long as ID is of generic type
 	{
 		return userRepository.findById(userId);

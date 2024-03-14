@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ecommerce.nuance.exception.OrderNotFound;
+import com.ecommerce.nuance.exception.OrderNotFoundException;
 import com.ecommerce.nuance.model.Order;
 import com.ecommerce.nuance.repository.OrderRepository;
 
@@ -24,6 +24,11 @@ public class OrderServiceImpl implements OrderService {
 		this.orderRepository = orderRepository;
 	}
 	
+	public List<Order> getAllOrders()
+	{
+		return orderRepository.findAll();
+	}
+	
 	public Optional<Order> getOrderById(Long orderId)
 	{
 		return getOrderById(orderId);
@@ -36,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 	
 
-    public Order updateOrder(Long orderId,Order updatedOrder) throws OrderNotFound 
+    public Order updateOrder(Long orderId,Order updatedOrder) throws OrderNotFoundException 
     {
         
         return orderRepository.findById(orderId).map(order->{ 
