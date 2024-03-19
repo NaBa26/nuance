@@ -1,6 +1,8 @@
 package com.ecommerce.nuance.controller;
 
 import java.util.List;
+
+
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.nuance.exception.CartNotFoundException;
-import com.ecommerce.nuance.exception.UserNotFoundException;
 import com.ecommerce.nuance.model.Cart;
-import com.ecommerce.nuance.model.User;
-import com.ecommerce.nuance.repository.CartRepository;
 import com.ecommerce.nuance.service.CartService;
-import com.ecommerce.nuance.service.UserService;
 
 @RestController
 @RequestMapping("/cart")
