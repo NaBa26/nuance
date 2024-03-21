@@ -12,7 +12,7 @@ body{
   display: flex;
   align-items: center;
   justify-content: center;
-  background: url('/nuance/src/main/resources/static/registration.jpg') center/cover no-repeat;
+  background: url('/registration.jpg') center/cover no-repeat;
 }
 .background-blur {
   position: fixed;

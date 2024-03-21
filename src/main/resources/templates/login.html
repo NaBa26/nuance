@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Nuance | Login</title>
+<link rel="stylesheet" href="registration.css">
+</head>
+<body>
+	<div class="wrapper">
+    <h2>Login</h2>
+    <form th:action="@{/login}" th:object="${user}" method="post">
+      <div class="input-box">
+        <input type="email" th:field="*{email}" placeholder="Enter your email" required>
+        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+      </div>
+      <div class="input-box">
+        <input type="password" th:field="*{password}" placeholder="Create password" required>
+        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

@@ -15,8 +15,45 @@
       </div>
       <div class="input-box">
         <input type="email" th:field="*{email}" placeholder="Enter your email" required>
-        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span> 
       </div>
+       <select class="input-box" style="width: 300px;"></select>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#cityDropdown').select2({
+        ajax: {
+          url: 'https://api.geonames.org/searchJSON',
+          dataType: 'json',
+          delay: 250,
+          data: function (params) {
+            return {
+              q: params.term, // user input
+              featureClass: 'P',
+              style: 'full',
+              maxRows: 10,
+              username: 'demo', // your GeoNames username
+            };
+          },
+          processResults: function (data) {
+            return {
+              results: $.map(data.geonames, function (item) {
+                return {
+                  id: item.geonameId,
+                  text: item.name
+                };
+              })
+            };
+          },
+          cache: true
+        },
+        placeholder: 'Select a city',
+        minimumInputLength: 1
+      });
+    });
+  </script>
       <div class="input-box">
         <input type="text" th:field="*{city}" placeholder="Enter your city" required>
         <span th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></span>
