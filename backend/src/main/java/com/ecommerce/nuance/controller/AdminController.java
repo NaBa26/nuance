@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -70,10 +71,13 @@ public class AdminController {
     {
     	try {
     		bookController.deleteBook(bookId);
-    		return new ResponseEntity<>(HttpStatus.OK);
+    		return ResponseEntity.ok().build();
     	} catch (NumberFormatException e)
     	{
-    		return new ResponseEntity.badRequest().build();
+    		return ResponseEntity.badRequest().build();
+    	} catch (Exception e)
+    	{
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     	}
     }
 	
@@ -105,11 +109,14 @@ public class AdminController {
    {
    	try {
    		orderController.deleteOrder(orderId);
-   		return new ResponseEntity<>(HttpStatus.OK);
-   	} catch (Exception e)
-   	{
-   		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-   	}
+   		return ResponseEntity.ok().build();
+   	} catch (NumberFormatException e)
+	{
+		return ResponseEntity.badRequest().build();
+	} catch (Exception e)
+	{
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+	}
    }
    
 	@GetMapping
@@ -140,10 +147,13 @@ public class AdminController {
     {
     	try {
     		userController.deleteUser(userId);
-    		return new ResponseEntity<>(HttpStatus.OK);
+    		return ResponseEntity.ok().build();
+    	} catch (NumberFormatException e)
+    	{
+    		return ResponseEntity.badRequest().build();
     	} catch (Exception e)
     	{
-    		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     	}
     }
 
