@@ -1,12 +1,13 @@
+import React from "react";
 
 
 function Header()
 {
     return (
-        <header>
+        <div className="containerMain">
             <div className="container">
                 <div className="imageContainer">
-                    <img src="frontend\src\assets\logoFull.png" alt="Logo"></img>
+                    <img></img>
                 </div>
                 <div className="panelContainer">
                     <div className="genres">
@@ -19,11 +20,11 @@ function Header()
                         <button className="aboutUsButton">About Us</button>
                     </div>
                     <div id="signUp">
-                        <button className="signUpButton"></button>
+                        <button className="signUpButton">Sign Up</button>
                     </div>
                 </div>
             </div>
-        </header>
+        </div>
     )
 }
 
