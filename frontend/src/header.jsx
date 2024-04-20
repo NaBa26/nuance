@@ -1,30 +1,30 @@
 import React from "react";
 
-
 function Header()
 {
     return (
-        <div className="containerMain">
             <div className="container">
                 <div className="imageContainer">
-                    <img></img>
+                    <img src="./src/assets/logo.png" alt="logo" />
                 </div>
                 <div className="panelContainer">
                     <div className="genres">
-                        <button className="genreButton">Genre</button>
+                        <a href="#"><button className="genreButton">Genre</button></a>
                     </div>
                     <div id="authors">
-                        <button className="authorButton">Author</button>
+                        <a href="#"><button className="authorButton">Author</button></a>
                     </div>
                     <div className="aboutus">
-                        <button className="aboutUsButton">About Us</button>
+                        <a href="#"><button className="aboutUsButton">About Us</button></a>
                     </div>
                     <div id="signUp">
-                        <button className="signUpButton">Sign Up</button>
+                        <a href="#"><button className="signUpButton">Sign Up</button></a>
+                    </div>
+                    <div className="logIn">
+                        <a href="#"><button className="logInButton">Log In</button></a>
                     </div>
                 </div>
             </div>
-        </div>
     )
 }
 
