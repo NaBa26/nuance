@@ -12,16 +12,34 @@
     height: 30px;
 }
 
+.search {
+    width: 80%;
+}
+
+.searchBar {
+    padding: 10px;
+    font-size: 17px;
+    border: 1px solid grey;
+    float: left;
+    
+    background: #f1f1f1;
+}
+
+.searchBar::placeholder {
+    justify-content: center;
+    align-items: center;
+}
+
 .panelContainer {
     display: flex;
     gap: 10px;
     
 }
 
-.genreButton, .authorButton, .aboutUsButton, .logInButton {
+.contactUsButton, .aboutUsButton, .logInButton {
     color: black;
     font-family: 'Roboto Black', sans-serif;
-    font-size: medium;
+    font-size: small;
     background-color: white;
     padding-top: 10px;
     padding-left: 10px;
@@ -34,7 +52,7 @@
 .signUpButton {
     font-family: 'Roboto Black', sans-serif;
     color: white;
-    font-size: large;
+    font-size: medium;
     padding-top: 10px;
     padding-left: 10px;
     padding-bottom: 10px;

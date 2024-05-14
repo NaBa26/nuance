@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 
 function Header()
 {
@@ -8,20 +9,20 @@ function Header()
                     <img src="./src/assets/logo.png" alt="logo" />
                 </div>
                 <div className="panelContainer">
-                    <div className="genres">
-                        <a href="#"><button className="genreButton">Genre</button></a>
+                    <div className="search">
+                        <input type="text" className="searchBar" placeholder='Search'/>
                     </div>
-                    <div id="authors">
-                        <a href="#"><button className="authorButton">Author</button></a>
+                    <div id="contactus">
+                        <a href="#"><button className="contactUsButton">Contact Us</button></a>
                     </div>
                     <div className="aboutus">
                         <a href="#"><button className="aboutUsButton">About Us</button></a>
                     </div>
                     <div id="signUp">
-                        <a href="#"><button className="signUpButton">Sign Up</button></a>
+                        <a href="Form"><button className="signUpButton">Sign Up</button></a>
                     </div>
                     <div className="logIn">
-                        <a href="#"><button className="logInButton">Log In</button></a>
+                        <Link to="/login"><button className="logInButton">Log In</button></Link>
                     </div>
                 </div>
             </div>

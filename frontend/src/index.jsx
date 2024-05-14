@@ -1,13 +1,14 @@
 import React from "react";
-import Header from "./header";
-import Slideshow from "./imageslideshow";
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 function App() {
 return (
-  <>
-  <Header />
-  <Slideshow />
-  </>
+  <Router>
+    <Switch>
+    <Route exact path="/" component={Home} />
+    <Route path="/login" component={Login} />
+    </Switch>
+  </Router>
 )
 }
 
