@@ -3,23 +3,17 @@ package com.ecommerce.nuance.controller;
 
 
 import java.util.List;
+
+
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ecommerce.nuance.exception.BookNotFoundException;
 import com.ecommerce.nuance.model.Book;
-import com.ecommerce.nuance.model.User;
 import com.ecommerce.nuance.service.BookService;
 
 @RestController 
@@ -27,44 +21,20 @@ import com.ecommerce.nuance.service.BookService;
 public class BookController {
 
 	@Autowired
-	 private final BookService bookService;
-
-	    @Autowired
-	    public BookController(BookService bookService) {
-	        this.bookService = bookService;
-	    }
+//	private final BookService bookService;
+//	
+//	    public BookController(BookService bookService) { //instantiating using a constructor for dependency injection and loose coupling
+//	        this.bookService = bookService;
+//	    }
 	    
 	    @GetMapping
-	    public List<Book> getAllBooks() {
-			return bookService.getAllBooks();
+	    public String getAllBooks() {
+	    	return "Naman";
+			//return bookService.getAllBooks();
 		}
 
-	    @GetMapping("/{bookId}")
-	    public Optional<Book> getBookById(@PathVariable String bookId) {
-	        return this.bookService.getBookById(Long.parseLong(bookId));
-	    }
-	
-		@PostMapping(consumes = "application/json")
-	    public Book createBook(@RequestBody Book book) 
-		{
-			return this.bookService.createBook(book);
-	    }
-
-        @PutMapping("/{bookId}")
-        public Book updateBook(@PathVariable long bookId, @RequestBody Book updatedBook) throws BookNotFoundException 
-        {
-        	return this.bookService.updateBook(bookId, updatedBook);
-        }
-
-        @DeleteMapping("/{bookId}")
-        public ResponseEntity<HttpStatus> deleteBook(@PathVariable String bookId) 
-        {
-        	try {
-        		this.bookService.deleteBook(Long.parseLong(bookId));
-        		return new ResponseEntity<>(HttpStatus.OK);
-        	} catch (Exception e)
-        	{
-        		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        	}
-        }
+//	    @GetMapping("/{book_id}")
+//	    public Optional<Book> getBookById(@PathVariable String book_id) {
+//	        return this.bookService.getBookById(Long.parseLong(book_id));
+//	    }
 }

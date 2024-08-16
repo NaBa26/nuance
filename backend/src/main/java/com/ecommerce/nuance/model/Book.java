@@ -1,6 +1,5 @@
 package com.ecommerce.nuance.model;
 
-import java.awt.Image;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,51 +10,55 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
 @Entity
-@Table(name="book")
+@Table(name="books")
 public class Book {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="book_id")
-	private long bookId;
-	@Column(name="title")
-	private String title;
+	@Column(name="id")
+	private int id;
+	@Column(name="name")
+	private String name;
+	@Column(name="image")
+	private String image;
 	@Column(name="author")
 	private String author;
-	@Column(name="genre")
-	private String genre;
-	@Column(name="isbn")
+	@Column(name="ISBN")
 	private String isbn;
 	@Column(name="price")
-	private double price;
-
-	@Transient 
-	private Image image;
-	
-	public Book() {
+	private float price;
+	@Column(name="quantity")
+	private int quantity;
+	@Column(name="genre")
+	private String genre;
+	public Book(int id, String name, String image, String author, String isbn, float price, int quantity, String genre) {
 		super();
-	}
-	
-	public long getBook_id() {
-		return bookId;
-	}
-	public void setBook_id(long bookId) {
-		this.bookId = bookId;
-	}
-	public String getTitle() {
-		return title;
-	}
-	public Book(long bookId, String title, String author, String genre, String isbn, double price) {
-		super();
-		this.bookId = bookId;
-		this.title = title;
+		this.id = id;
+		this.name = name;
+		this.image = image;
 		this.author = author;
-		this.genre = genre;
 		this.isbn = isbn;
 		this.price = price;
+		this.quantity = quantity;
+		this.genre = genre;
 	}
-	public void setTitle(String title) {
-		this.title = title;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getImage() {
+		return image;
+	}
+	public void setImage(String image) {
+		this.image = image;
 	}
 	public String getAuthor() {
 		return author;
@@ -63,29 +66,30 @@ public class Book {
 	public void setAuthor(String author) {
 		this.author = author;
 	}
-	public String getGenre() {
-		return genre;
-	}
-	public void setGenre(String genre) {
-		this.genre = genre;
-	}
 	public String getIsbn() {
 		return isbn;
 	}
 	public void setIsbn(String isbn) {
 		this.isbn = isbn;
 	}
-	public double getPrice() {
+	public float getPrice() {
 		return price;
 	}
-	public void setPrice(double price) {
+	public void setPrice(float price) {
 		this.price = price;
 	}
-	@Override
-	public String toString() {
-		return "Book [bookId=" + bookId + ", title=" + title + ", "
-				+ "Author=" + author + ", Genre=" + genre + ", "
-						+ "isbn=" + isbn + ", price=" + price + "]";
+	public int getQuantity() {
+		return quantity;
 	}
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+	public String getGenre() {
+		return genre;
+	}
+	public void setGenre(String genre) {
+		this.genre = genre;
+	}
+	
 	
 }

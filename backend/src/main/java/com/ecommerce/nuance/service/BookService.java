@@ -1,6 +1,8 @@
 package com.ecommerce.nuance.service;
 
 import java.util.List;
+
+
 import java.util.Optional;
 
 import com.ecommerce.nuance.exception.BookNotFoundException;
@@ -10,11 +12,11 @@ public interface BookService {
 	
 	public List<Book> getAllBooks();
 	
-	public Optional<Book> getBookById(Long book_id);
+	public Optional<Book> getBookById(Integer book_id);
 	
     public Book createBook(Book book);
 
-    public Book updateBook(Long bookId,Book updatedBook) throws BookNotFoundException;
+    public Book updateBook(Integer bookId,Book updatedBook) throws BookNotFoundException;
 
-    public void deleteBook(Long bookId);
+    public void deleteBook(Integer bookId);
 	}

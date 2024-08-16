@@ -4,6 +4,8 @@ package com.ecommerce.nuance.service;
 import java.util.List;
 
 
+
+
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -20,7 +22,6 @@ public class BookServiceImpl implements BookService {
 
 	private final BookRepository bookRepository;
 
-	@Autowired
 	public BookServiceImpl(BookRepository bookRepository) { // This constructor is created to automatically update the value in the repository class
 	    this.bookRepository = bookRepository;
 	}
@@ -31,24 +32,23 @@ public class BookServiceImpl implements BookService {
 		return bookRepository.findAll();
 	}
 	
-	public Optional<Book> getBookById(Long bookId)
+	public Optional<Book> getBookById(Integer bookId)
 	{
 		return bookRepository.findById(bookId);
 	}
 	
 	
-	public Book createBook(Book book)
+	public Book createBook(Book bookModel)
 	{
-		return bookRepository.save(book);
+		return bookRepository.save(bookModel);
 	}
 	
 
-    public Book updateBook(Long bookId,Book updatedBook) throws BookNotFoundException 
+    public Book updateBook(Integer bookId,Book updatedBook) throws BookNotFoundException 
     {
         
         return bookRepository.findById(bookId).map(book->{ 
-        	book.setTitle(updatedBook.getTitle());
-            book.setAuthor(updatedBook.getAuthor());
+        	book.setName(updatedBook.getName());
             book.setGenre(updatedBook.getGenre());
             book.setIsbn(updatedBook.getIsbn());
             book.setPrice(updatedBook.getPrice());
@@ -58,7 +58,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Transactional
-    public void deleteBook(Long bookId)
+    public void deleteBook(Integer bookId)
     {
     	bookRepository.deleteById(bookId);
     }
@@ -67,12 +67,12 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findByAuthorAndGenreIgnoreCase(author,genre);
     }
     
-    List<Book> findByPriceLessThanEqual(double price)
+    List<Book> findByPriceLessThanEqual(float price)
     {
     	return bookRepository.findByPriceLessThanEqual(price);
     }
     Book findByIsbnIgnoreCase(String isbn) throws BookNotFoundException {
-        Book book = bookRepository.findByIsbnIgnoreCase(isbn);
+    	Book book = bookRepository.findByIsbnIgnoreCase(isbn);
         if (book == null) {
             throw new BookNotFoundException("Book not found for ISBN: " + isbn);
         }
