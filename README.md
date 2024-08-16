@@ -12,7 +12,7 @@ Nuance Bookstore is an e-commerce platform dedicated to providing a nuanced shop
 ## Technologies Used
 
 - **Backend:** Java, Spring Framework, Maven, Hibernate
-- **Frontend:** HTML, CSS, JavaScript, React Framework
+- **Frontend:** HTML, CSS, JavaScript, Vue Framework
 - **Database:** MySQL
 
 ## Work in Progress
