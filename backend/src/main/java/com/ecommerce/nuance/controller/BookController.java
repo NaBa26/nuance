@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ExitCodeEvent;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,16 +22,16 @@ import com.ecommerce.nuance.service.BookService;
 public class BookController {
 
 	@Autowired
-//	private final BookService bookService;
-//	
-//	    public BookController(BookService bookService) { //instantiating using a constructor for dependency injection and loose coupling
-//	        this.bookService = bookService;
-//	    }
+	private final BookService bookService;
+	
+		//instantiating using a constructor for dependency injection and loose coupling
+	    public BookController(BookService bookService) { 
+	        this.bookService = bookService;
+	    }
 	    
-	    @GetMapping
-	    public String getAllBooks() {
-	    	return "Naman";
-			//return bookService.getAllBooks();
+	    @GetMapping()
+	    public List<Book> getAllBooks() {
+			return bookService.getAllBooks();
 		}
 
 //	    @GetMapping("/{book_id}")

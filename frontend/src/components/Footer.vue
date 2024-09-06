@@ -1,22 +1,26 @@
 <script setup>
   import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-  import { faUser } from '@fortawesome/free-regular-svg-icons';
-  import { faHeart } from '@fortawesome/free-regular-svg-icons';
-  import { faShoppingBag } from '@fortawesome/free-solid-svg-icons';
+  import { faFacebook } from '@fortawesome/free-brands-svg-icons';
+  import { faTwitter } from '@fortawesome/free-brands-svg-icons';
+  import { faInstagram } from '@fortawesome/free-brands-svg-icons';
+  import { faLinkedin } from '@fortawesome/free-brands-svg-icons';
 </script>
 
 <template>
-  <footer class="text-center text-lg-start" style="background-color: #F0A500;">
+  <footer class="text-center text-lg-start justify-content-center" style="background-color: #F0A500;">
     <!-- Social Media Links (optional) -->
-    <div class="py-3">
-      <a href="#" class="text-decoration-none me-3" style="color: #1B263B;">
-        <i class="fa fa-user"></i>
+    <div class="py-3 text-center">
+      <a href="#" class="text-decoration-none me-2" style="color: #1B263B;">
+        <FontAwesomeIcon :icon="faTwitter" size="lg" />
       </a>
-      <a href="#" class="text-decoration-none me-3" style="color: #1B263B;">
-        <i class="fa fa-twitch" aria-hidden="true"></i>
+      <a href="#" class="text-decoration-none me-2" style="color: #1B263B;">
+        <FontAwesomeIcon :icon="faInstagram" size="lg" />
       </a>
-      <a href="#" class="text-decoration-none" style="color: #1B263B;">
-        <i class="fa fa-instagram"></i>
+      <a href="#" class="text-decoration-none me-2" style="color: #1B263B;">
+        <FontAwesomeIcon :icon="faFacebook" size="lg" />
+      </a>
+      <a href="#" class="text-decoration-none me-2" style="color: #1B263B;">
+        <FontAwesomeIcon :icon="faLinkedin" size="lg" />
       </a>
     </div>
 

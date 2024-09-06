@@ -9,7 +9,7 @@ import Header from './components/Header.vue';
   </header>
 
   <main>
-
+    <router-view />
   </main>
 
   <footer>

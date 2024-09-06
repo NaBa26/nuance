@@ -1,36 +1,30 @@
+//The variable named here will be used in the Repository class query methods, so make sure that they align with one another.
 package com.ecommerce.nuance.model;
 
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 
 @Entity
 @Table(name="books")
 public class Book {
 
+	
+	/*The @GeneratedValue annotation in JPA is used to specify the strategy used to generate the primary values for entities. 
+	The GenerationType.IDENTITY strategy is commonly used with databases that supports auto incrementing*/
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY) 
 	private int id;
-	@Column(name="name")
 	private String name;
-	@Column(name="image")
 	private String image;
-	@Column(name="author")
 	private String author;
-	@Column(name="ISBN")
 	private String isbn;
-	@Column(name="price")
 	private float price;
-	@Column(name="quantity")
 	private int quantity;
-	@Column(name="genre")
 	private String genre;
+	
 	public Book(int id, String name, String image, String author, String isbn, float price, int quantity, String genre) {
 		super();
 		this.id = id;
@@ -42,6 +36,19 @@ public class Book {
 		this.quantity = quantity;
 		this.genre = genre;
 	}
+	
+	/*
+	 * The no-argument constructor is essential for the framework to instantiate this entity class
+	 * using reflection. It allows the creation of proxy instances, which are subclasses that override
+	 * certain methods to implement lazy-loading behavior. This constructor is necessary because,
+	 * at the time of instantiation, the framework may not yet have access to the entity's data,
+	 * and therefore cannot use a parameterized constructor. By providing a no-argument constructor,
+	 * we ensure that the framework can create an empty instance of this class, which can later be
+	 * populated with data as needed.
+	 */
+	public Book() {}
+
+    
 	public int getId() {
 		return id;
 	}

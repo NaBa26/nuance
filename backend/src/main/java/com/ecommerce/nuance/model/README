@@ -1,4 +1,0 @@
-@Tranient Annotation was used along with the image variable because it won't be persistent in the DB, ,meaning
-it won't be necessary to update it. 
-No need to create getters and setters for it either.
-The variable named here will be used in the Repository class query methods so make sure they align with one another.

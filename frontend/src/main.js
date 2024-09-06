@@ -19,5 +19,6 @@ import '/public/assets/js/slim.min.js';
 
 import { createApp } from 'vue'
 import App from './App.vue'
+import router from './routes';
 
-createApp(App).mount('#app')
+createApp(App).use(router).mount('#app')
