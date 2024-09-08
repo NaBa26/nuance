@@ -19,6 +19,7 @@
     "@mui/material": "^5.16.7",
     "axios": "^1.7.2",
     "bootstrap-icons": "^1.11.3",
+    "frontend": "file:",
     "vue": "^3.4.21",
     "vue-router": "^4.4.3"
   },

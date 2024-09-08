@@ -1,6 +1,10 @@
 //The variable named here will be used in the Repository class query methods, so make sure that they align with one another.
 package com.ecommerce.nuance.model;
 
+import java.sql.Date;
+import java.time.LocalDate;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,8 +28,10 @@ public class Book {
 	private float price;
 	private int quantity;
 	private String genre;
+	@Column(name = "published_date", columnDefinition = "DATE")
+	private LocalDate published_date;
 	
-	public Book(int id, String name, String image, String author, String isbn, float price, int quantity, String genre) {
+	public Book(int id, String name, String image, String author, String isbn, float price, int quantity, String genre, LocalDate published_date) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -35,6 +41,7 @@ public class Book {
 		this.price = price;
 		this.quantity = quantity;
 		this.genre = genre;
+		this.published_date = published_date;
 	}
 	
 	/*
@@ -96,6 +103,12 @@ public class Book {
 	}
 	public void setGenre(String genre) {
 		this.genre = genre;
+	}
+	public LocalDate getPublishedDate() {
+		return published_date;
+	}
+	public void setPublishedDate(LocalDate published_date) {
+		this.published_date = published_date;
 	}
 	
 	

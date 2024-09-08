@@ -22,7 +22,8 @@ public class BookServiceImpl implements BookService {
 
 	private final BookRepository bookRepository;
 
-	public BookServiceImpl(BookRepository bookRepository) { // This constructor is created to automatically update the value in the repository class
+	// This constructor is created to automatically update the value in the repository class
+	public BookServiceImpl(BookRepository bookRepository) { 
 	    this.bookRepository = bookRepository;
 	}
 	
@@ -70,12 +71,5 @@ public class BookServiceImpl implements BookService {
     List<Book> findByPriceLessThanEqual(float price)
     {
     	return bookRepository.findByPriceLessThanEqual(price);
-    }
-    Book findByIsbnIgnoreCase(String isbn) throws BookNotFoundException {
-    	Book book = bookRepository.findByIsbnIgnoreCase(isbn);
-        if (book == null) {
-            throw new BookNotFoundException("Book not found for ISBN: " + isbn);
-        }
-        return book;
     }
 }

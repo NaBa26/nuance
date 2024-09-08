@@ -26,7 +26,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
       <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
         <ul class="navbar-nav" style="font-size: 0.8rem;">
           <li class="nav-item">
-            <a class="nav-link" href="#">Home</a>
+            <router-link class="nav-link" to="/">Home</router-link>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">New Arrivals</a>
@@ -55,7 +55,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
               <li>
                 <hr class="dropdown-divider">
               </li>
-              <li><router-link class="dropdown-item" to="/products">More Genres</router-link></li>
+              <li><router-link class="dropdown-item" to="/books">More Genres</router-link></li>
             </ul>
           </li>
 

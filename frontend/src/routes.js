@@ -1,10 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Product from './components/Product.vue';
+import Book from './components/Book.vue';
 import Home from './components/Home.vue';
+import Sidebar from './components/Sidebar.vue';
 
 const routes = [
   { path: '/', component: Home },
-  { path: '/products', component: Product }
+  { path: '/books',
+    components: {
+      book: Book,
+      sidebar: Sidebar
+    }}
 ];
 
 const router = createRouter({

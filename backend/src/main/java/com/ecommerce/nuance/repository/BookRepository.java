@@ -15,6 +15,5 @@ public interface BookRepository extends JpaRepository<Book, Integer>
 {
 	List<Book> findById(float dads);
 	List<Book> findByPriceLessThanEqual(double price);
-	Book findByIsbnIgnoreCase(String isbn);
 	List<Book> findByAuthorAndGenreIgnoreCase(String author, String genre);
 }
