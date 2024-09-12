@@ -5,7 +5,6 @@
 <template>
     <main>
         <Carousel />
-        <p>Hello</p>
     </main>
     
 </template>

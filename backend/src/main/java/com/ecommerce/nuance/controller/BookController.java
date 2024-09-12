@@ -4,16 +4,11 @@ package com.ecommerce.nuance.controller;
 
 import java.util.List;
 
-
-
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ExitCodeEvent;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.nuance.model.Book;
@@ -33,11 +28,13 @@ public class BookController {
 	    
 	    @GetMapping()
 	    public List<Book> getAllBooks() {
+	    	System.out.print(bookService.getAllBooks().get(0).getPublishedDate());
 			return bookService.getAllBooks();
 		}
 
-//	    @GetMapping("/{book_id}")
-//	    public Optional<Book> getBookById(@PathVariable String book_id) {
-//	        return this.bookService.getBookById(Long.parseLong(book_id));
-//	    }
+	    @GetMapping("/{bookName}")
+	    public Book getBookById(@PathVariable String bookName, @RequestParam("id") String bookId) {
+
+	        return this.bookService.getBookById(Integer.parseInt(bookId));
+	    }
 }

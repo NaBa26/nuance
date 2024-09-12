@@ -9,15 +9,19 @@ import Header from './components/Header.vue';
   </header>
 
   <main style="display: flex;">
-    <sidebar style="position:sticky; display: grid; top: 0;">
-    <router-view name="sidebar" />
-  </sidebar>
-    <content>
+    <aside style="position:sticky; display: grid; top: 0;">
+      <router-view name="sidebar" />
+    </aside>
+
+    <section style="flex-grow: 1;">
+      <router-view name="books" />
+      <router-view name="home" />
       <router-view name="book" />
-    </content>
+    </section>
   </main>
 
   <footer>
     <Footer />
   </footer>
 </template>
+

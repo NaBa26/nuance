@@ -12,7 +12,7 @@ public interface BookService {
 	
 	public List<Book> getAllBooks();
 	
-	public Optional<Book> getBookById(Integer book_id);
+	public Book getBookById(Integer book_id);
 	
     public Book createBook(Book book);
 

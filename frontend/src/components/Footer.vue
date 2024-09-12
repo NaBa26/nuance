@@ -25,9 +25,8 @@
     </div>
 
     <!-- Copyright -->
-    <div class="text-center p-3" style="background-color: #F0A500;">
-      © {{ currentYear }} Copyright:
-      <a class="text-body" href="http://localhost:5173/" style="color: #1B263B;">nuance.com</a>
+    <div class="text-center p-3 md-2" style="background-color: #F0A500;">
+      © {{ currentYear }}, nuance.com, Inc. or its affiliates
     </div>
   </footer>
 </template>
