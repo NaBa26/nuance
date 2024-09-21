@@ -14,17 +14,19 @@ const routes = [
     } 
   },
   { path: '/books',
+    name: 'Books',
     components: {
       books: Books,
       sidebar: Sidebar
   }
   }, 
   {
-    path: '/books/:bookName',
+    path: '/books/:bookName/:bookId',
     name: 'Book',
     components: 
     {
-      book:Book
+      book:Book,
+      sidebar:Sidebar
     }
   },
 ];

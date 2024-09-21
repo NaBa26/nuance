@@ -4,7 +4,9 @@ import { faUser } from '@fortawesome/free-regular-svg-icons';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { faShoppingBag } from '@fortawesome/free-solid-svg-icons';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+
 </script>
+
 
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1B263B;">
@@ -114,9 +116,10 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 
 <script>
+import { onMounted } from 'vue';
+
 export default {
-  mounted() {
-    // Enable hover dropdown
+  onMounted() {
     const dropdowns = document.querySelectorAll('.nav-item.dropdown');
     dropdowns.forEach((dropdown) => {
       dropdown.addEventListener('mouseover', function () {

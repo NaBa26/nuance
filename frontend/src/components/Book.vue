@@ -61,29 +61,45 @@
 
 </template>
 
-<script>
-import { ref } from 'vue';
-import { onMounted } from 'vue';
+<script setup>
+import { onMounted, ref, watch } from 'vue';
+import axios from 'axios';
+import { useRoute } from 'vue-router';
 
-const books = ref([]);
-    
-    const trimBookName = (name) => {
-      return name.trim().replace(/\s+/g, '-').toLowerCase();
+    const books = ref([]);
+    const route = useRoute(); 
+
+    const trimBookName = (bookName) => {
+      return bookName.trim().replace(/\s+/g, '-').toLowerCase();
     };
 
-onMounted(async () => {
-      const bookName = trimBookName(decodeURIComponent(this.$route.params.bookName));
-
-      if (bookId && bookName) {
-        try {
-          const url = `http://localhost:8080/books/${bookName}/?id=${bookId}`;
-          const response = await axios.get(url);
-          books.value = response.data;
-        } catch (error) {
-          console.error('Error fetching book details:', error);
-        }
+    onMounted(async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/books');
+        books.value = response.data;
+      } catch (error) {
+        console.error('Error fetching books:', error);
       }
-});
+    });
+
+    watch(
+      () => route.params,
+      async (newParams) => {
+        const bookName = trimBookName(decodeURIComponent(newParams.bookName));
+        const bookId = newParams.bookId;
+
+        if (bookId && bookName) {
+          try {
+            const url = `http://localhost:8080/books/${bookName}/?id=${bookId}`;
+            const response = await axios.get(url);
+            books.value = response.data;
+          } catch (error) {
+            console.error('Error fetching book details:', error);
+          }
+        }
+      },
+      { immediate: true }
+    );
 </script>
 
 <style>

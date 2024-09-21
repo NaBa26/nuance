@@ -4,6 +4,11 @@
   import { faTwitter } from '@fortawesome/free-brands-svg-icons';
   import { faInstagram } from '@fortawesome/free-brands-svg-icons';
   import { faLinkedin } from '@fortawesome/free-brands-svg-icons';
+
+  import { ref } from 'vue';
+
+    const currentDate = new Date();
+    const currentYear = ref(currentDate.getFullYear())
 </script>
 
 <template>
@@ -30,13 +35,3 @@
     </div>
   </footer>
 </template>
-
-<script>
-export default {
-  data() {
-    return {
-      currentYear: new Date().getFullYear() // Dynamically get the current year
-    };
-  }
-};
-</script>

@@ -4,6 +4,7 @@ package com.ecommerce.nuance.controller;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,13 +29,11 @@ public class BookController {
 	    
 	    @GetMapping()
 	    public List<Book> getAllBooks() {
-	    	System.out.print(bookService.getAllBooks().get(0).getPublishedDate());
 			return bookService.getAllBooks();
 		}
 
 	    @GetMapping("/{bookName}")
 	    public Book getBookById(@PathVariable String bookName, @RequestParam("id") String bookId) {
-
 	        return this.bookService.getBookById(Integer.parseInt(bookId));
 	    }
 }

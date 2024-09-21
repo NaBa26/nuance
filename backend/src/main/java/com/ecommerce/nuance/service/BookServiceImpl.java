@@ -8,6 +8,7 @@ import java.util.List;
 
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ExitCodeEvent;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -33,9 +34,11 @@ public class BookServiceImpl implements BookService {
 		return bookRepository.findAll();
 	}
 	
-	public Optional<Book> getBookById(Integer bookId)
+	public Book getBookById(Integer bookId)
 	{
-		return bookRepository.findById(bookId);
+		System.out.println(bookRepository.findById(bookId));
+		return null;
+		//return bookRepository.findById(bookId);
 	}
 	
 	
