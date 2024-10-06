@@ -81,11 +81,10 @@ import { useRoute } from 'vue-router';
           <div class="book-discount">
             ({{ calculateDiscount(book.price, getOriginalPrice(book.price)) }}% off)
           </div>
-          <button class="add-to-cart-btn">Add to cart</button>
+          <button class="add-to-cart-btn">Add to Bag</button>
         </div>
       </div>
-    <div><p>No Books Available</p></div>
-    </div>
+  </div>
   </div>
 </template>
 

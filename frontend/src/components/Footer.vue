@@ -1,7 +1,6 @@
 <script setup>
   import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
   import { faFacebook } from '@fortawesome/free-brands-svg-icons';
-  import { faTwitter } from '@fortawesome/free-brands-svg-icons';
   import { faInstagram } from '@fortawesome/free-brands-svg-icons';
   import { faLinkedin } from '@fortawesome/free-brands-svg-icons';
 
@@ -15,9 +14,6 @@
   <footer class="text-center text-lg-start justify-content-center" style="background-color: #F0A500;">
     <!-- Social Media Links (optional) -->
     <div class="py-3 text-center">
-      <a href="#" class="text-decoration-none me-2" style="color: #1B263B;">
-        <FontAwesomeIcon :icon="faTwitter" size="lg" />
-      </a>
       <a href="#" class="text-decoration-none me-2" style="color: #1B263B;">
         <FontAwesomeIcon :icon="faInstagram" size="lg" />
       </a>

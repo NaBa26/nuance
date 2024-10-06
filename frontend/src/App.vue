@@ -5,7 +5,7 @@ import Header from './components/Header.vue';
 
 <template>
   <header>
-    <Header />
+    <router-view name="header" />
   </header>
 
   <main style="display: flex;">
@@ -17,11 +17,13 @@ import Header from './components/Header.vue';
       <router-view name="books" />
       <router-view name="home" />
       <router-view name="book" />
+      <router-view name="login" />
+      <router-view name="signup" />
     </section>
   </main>
 
   <footer>
-    <Footer />
+    <router-view name="footer" />
   </footer>
 </template>
 

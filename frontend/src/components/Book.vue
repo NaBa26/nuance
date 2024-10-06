@@ -3,7 +3,7 @@
 
         <!-- Left Column (Product Images) -->
         <div class="left-column">
-            <img src="https://via.placeholder.com/400x500" alt="Book Image">
+            <img :src="`/assets/images/${books.image}`" :alt="books.name" class="book-image">
             <div class="thumbnail-gallery">
                 <img src="https://via.placeholder.com/60x80" alt="Thumb1">
                 <img src="https://via.placeholder.com/60x80" alt="Thumb2">
@@ -34,7 +34,7 @@
         <!-- Right Column (Buy Section) -->
         <div class="right-column">
             <p class="price">$19.99</p>
-            <button>Add to Cart</button>
+            <button>Add to Bag</button>
             <button class="buy-now">Buy Now</button>
             <div class="delivery-info">
                 <p>Delivery: Free shipping on orders over $25</p>
@@ -58,49 +58,60 @@
                 recent.</p>
         </div>
     </div>
-
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch, defineProps } from 'vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
 
-    const books = ref([]);
-    const route = useRoute(); 
+// Define props
+const props = defineProps(['bookName', 'bookId']);
+const books = ref([]);
+const route = useRoute();
 
-    const trimBookName = (bookName) => {
-      return bookName.trim().replace(/\s+/g, '-').toLowerCase();
-    };
+const trimBookName = (bookName) => {
+  return bookName.trim().replace(/\s+/g, '-').toLowerCase();
+};
 
-    onMounted(async () => {
+// Fetch book details on mounted
+onMounted(async () => {
+  const bookName = trimBookName(decodeURIComponent(props.bookName));
+  const bookId = props.bookId;
+
+  if (bookId && bookName) {
+    try {
+      const url = `http://localhost:8080/books/${bookName}/?id=${bookId}`;
+      const response = await axios.get(url);
+      books.value = response.data;
+      console.log(books.value);
+    } catch (error) {
+      console.error('Error fetching book details:', error);
+    }
+  }
+});
+
+// Watch for route changes
+watch(
+  () => route.params,
+  async (newParams) => {
+    const bookName = trimBookName(decodeURIComponent(newParams.bookName));
+    const bookId = newParams.bookId;
+
+    if (bookId && bookName) {
       try {
-        const response = await axios.get('http://localhost:8080/books');
+        const url = `http://localhost:8080/books/${bookName}/?id=${bookId}`;
+        const response = await axios.get(url);
         books.value = response.data;
       } catch (error) {
-        console.error('Error fetching books:', error);
+        console.error('Error fetching book details:', error);
       }
-    });
-
-    watch(
-      () => route.params,
-      async (newParams) => {
-        const bookName = trimBookName(decodeURIComponent(newParams.bookName));
-        const bookId = newParams.bookId;
-
-        if (bookId && bookName) {
-          try {
-            const url = `http://localhost:8080/books/${bookName}/?id=${bookId}`;
-            const response = await axios.get(url);
-            books.value = response.data;
-          } catch (error) {
-            console.error('Error fetching book details:', error);
-          }
-        }
-      },
-      { immediate: true }
-    );
+    }
+  },
+  { immediate: true }
+);
 </script>
+
 
 <style>
 body {
