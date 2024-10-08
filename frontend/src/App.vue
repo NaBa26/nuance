@@ -13,7 +13,7 @@ import Header from './components/Header.vue';
       <router-view name="sidebar" />
     </aside>
 
-    <section style="flex-grow: 1;">
+    <section style="flex-grow: 1;" >
       <router-view name="books" />
       <router-view name="home" />
       <router-view name="book" />

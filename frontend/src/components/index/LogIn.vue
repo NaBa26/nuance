@@ -1,7 +1,6 @@
 <script setup>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faGoogle } from '@fortawesome/free-brands-svg-icons';
-import { faMeta } from '@fortawesome/free-brands-svg-icons';
+import { faXTwitter, faGoodreads, faGoogle } from '@fortawesome/free-brands-svg-icons';
 </script>
 
 <template>
@@ -11,10 +10,10 @@ import { faMeta } from '@fortawesome/free-brands-svg-icons';
       <div class="col-12 col-md-8 col-lg-6 col-xl-5">
         <div class="card bg-dark text-white" style="border-radius: 1rem;">
           <div class="card-body p-5 text-center">
-            <h2 class="fw-bold mb-4 text-uppercase">Login</h2>
-            <p class="text-white-50 mb-5">Please enter your login and password!</p>
+            <h2 class="fw-bold mb-4 text-uppercase" style="color: #F0A500">Login</h2>
+            <p class="text-white-50 mb-5">Please enter your username and password!</p>
 
-            <form>
+             <form>
             <div class="form-outline form-white mb-4">
               <label class="form-label" for="typeEmailX">Username</label>
               <input type="text" id="typeEmailX" class="form-control form-control-lg" required />
@@ -30,8 +29,9 @@ import { faMeta } from '@fortawesome/free-brands-svg-icons';
             <div class="d-flex justify-content-center mt-4">
                 <div class="auth-footer">
                     <h6>Or login with</h6>
-                        <a href="#" class="text-decoration-none me-2"><FontAwesomeIcon :icon="faGoogle" size="xl" /></a>
-                        <a href="#" class="text-decoration-none me-2"><FontAwesomeIcon :icon="faMeta" size="xl" /></a>
+                        <a href="/oauth2/authorization/google" class="text-decoration-none me-2"><FontAwesomeIcon :icon="faGoogle" size="xl" /></a>
+                        <a href="#" class="text-decoration-none me-2"><FontAwesomeIcon :icon="faXTwitter" size="xl" /></a>
+                        <a href="#" class="text-decoration-none me-2"><FontAwesomeIcon :icon="faGoodreads" size="xl" /></a>
                 </div>
             </div>
 
@@ -83,5 +83,9 @@ import { faMeta } from '@fortawesome/free-brands-svg-icons';
 
 .d-flex a {
   color: #F0A500; 
+}
+
+.auth-footer a:hover{
+  color: white;
 }
 </style>
