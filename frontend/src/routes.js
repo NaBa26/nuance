@@ -7,10 +7,11 @@ import Sidebar from './components/Sidebar.vue';
 import Book from './components/Book.vue';
 import LogIn from './components/index/LogIn.vue';
 import SignUp from './components/index/SignUp.vue';
+import NotFound from './components/NotFound.vue';
 
 
 const routes = [
-  { path: '/',
+  { path: '/home',
     home:Home, 
     components: 
     {
@@ -18,6 +19,9 @@ const routes = [
       header: Header,
       footer:Footer
     } 
+  },
+  { path: '/',
+    redirect: '/home', 
   },
   { path: '/books',
     name: 'Books',
@@ -53,7 +57,14 @@ const routes = [
     components: {
       signup: SignUp
     }
-  }
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    components: {
+      notfound : NotFound
+    }
+  },
 ];
 
 const router = createRouter({

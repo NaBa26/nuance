@@ -11,33 +11,33 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ecommerce.nuance.exception.UserNotFoundException;
-import com.ecommerce.nuance.model.Customer;
-import com.ecommerce.nuance.repository.CustomerRepository;
+import com.ecommerce.nuance.model.User;
+import com.ecommerce.nuance.repository.UserRepository;
 
 @Service
-public class CustomerServiceImpl implements CustomerService {
+public class UserServiceImpl implements UserService {
 
-	private final CustomerRepository userRepository;
+	private final UserRepository userRepository;
 
 	@Autowired
-	public CustomerServiceImpl(CustomerRepository userRepository) // This constructor is created to automatically update the value in the repository class
+	public UserServiceImpl(UserRepository userRepository) // This constructor is created to automatically update the value in the repository class
 	{
 		this.userRepository = userRepository;
 	}
 	
-	public List<Customer> getAllUsers()
+	public List<User> getAllUsers()
 	{
 		return userRepository.findAll();
 	}
 	
 	
-	public Optional<Customer> getUserById(Long userId) //can't use long, use Long as ID is of generic type
+	public Optional<User> getUserById(Long userId) //can't use long, use Long as ID is of generic type
 	{
 		return userRepository.findById(userId);
 	}
 	
 	
-	public Customer createUser(Customer user)
+	public User createUser(User user)
 	{
 		if(user!=null)
 		{
@@ -47,7 +47,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 	
 
-    public Customer updateUser(long userId,Customer updatedUser) throws UserNotFoundException 
+    public User updateUser(long userId,User updatedUser) throws UserNotFoundException 
     {
         
         return userRepository.findById(userId).map(user->{ 
@@ -66,7 +66,7 @@ public class CustomerServiceImpl implements CustomerService {
 		userRepository.deleteById(userId);
     }
     
-    public List<Customer> findByCity(String city) {
+    public List<User> findByCity(String city) {
         return userRepository.findByCity(city);
     }
 

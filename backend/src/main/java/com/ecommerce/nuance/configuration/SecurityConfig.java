@@ -18,7 +18,7 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     	//this is to specify that which end points would be accessible to all
         http.authorizeHttpRequests(authorizeHttpRequests ->authorizeHttpRequests
-        		.requestMatchers("/", "/login")
+        		.requestMatchers("/", "/login", "/**")
         		.permitAll().anyRequest()
         		.authenticated())
         //for o-auth

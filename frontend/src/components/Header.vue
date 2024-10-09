@@ -28,7 +28,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
       <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
         <ul class="navbar-nav" style="font-size: 0.8rem;">
           <li class="nav-item">
-            <router-link class="nav-link" to="/">Home</router-link>
+            <router-link class="nav-link" to="/home">Home</router-link>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">New Arrivals</a>

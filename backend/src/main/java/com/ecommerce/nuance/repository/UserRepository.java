@@ -5,12 +5,11 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.ecommerce.nuance.model.Customer;
+import com.ecommerce.nuance.model.User;
 
 @Repository
-public  interface CustomerRepository extends JpaRepository<Customer, Long>{
+public  interface UserRepository extends JpaRepository<User, Long>{
 
-	List<Customer> findByCity(String city);
-
+	List<User> findByCity(String city);
 
 }

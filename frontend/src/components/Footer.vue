@@ -1,8 +1,6 @@
 <script setup>
   import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-  import { faFacebook } from '@fortawesome/free-brands-svg-icons';
-  import { faInstagram } from '@fortawesome/free-brands-svg-icons';
-  import { faLinkedin } from '@fortawesome/free-brands-svg-icons';
+  import { faFacebook, faInstagram, faLinkedin, faXTwitter } from '@fortawesome/free-brands-svg-icons';
 
   import { ref } from 'vue';
 
@@ -22,6 +20,9 @@
       </a>
       <a href="#" class="text-decoration-none me-2" style="color: #1B263B;">
         <FontAwesomeIcon :icon="faLinkedin" size="lg" />
+      </a>
+      <a href="#" class="text-decoration-none me-2" style="color: #1B263B;">
+        <FontAwesomeIcon :icon="faXTwitter" size="lg" />
       </a>
     </div>
 

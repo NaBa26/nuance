@@ -54,8 +54,7 @@
 
         <div class="customer-reviews">
             <h3>Customer Reviews</h3>
-            <p>This is where customer reviews and ratings would be displayed, with options to filter by rating or most
-                recent.</p>
+            <p>This is where customer reviews and ratings would be displayed, with options to filter by rating or most recent.</p>
         </div>
     </div>
 </template>
@@ -81,7 +80,7 @@ onMounted(async () => {
 
   if (bookId && bookName) {
     try {
-      const url = `http://localhost:8080/books/${bookName}/?id=${bookId}`;
+      const url = `api/books/${bookName}/?id=${bookId}`;
       const response = await axios.get(url);
       books.value = response.data;
       console.log(books.value);
@@ -100,7 +99,7 @@ watch(
 
     if (bookId && bookName) {
       try {
-        const url = `http://localhost:8080/books/${bookName}/?id=${bookId}`;
+        const url = `api/books/${bookName}/?id=${bookId}`;
         const response = await axios.get(url);
         books.value = response.data;
       } catch (error) {

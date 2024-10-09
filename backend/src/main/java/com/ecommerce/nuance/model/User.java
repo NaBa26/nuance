@@ -1,6 +1,5 @@
 package com.ecommerce.nuance.model;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,39 +8,43 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name="users")
-public class Customer {
+public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="user_Id")
-	private long userId;
-	@Column(name="username")
-    private String username;
-	@Column(name="password")
-    private String password;
-	@Column(name="email")
+	private int id;
+	
+	private String first_name;
+    private String last_name;
     private String email;
-	@Column(name="city")
-    private String city;
-	
-	public Customer(long userId, String username, String password, String email, String city) { //This is only need if the variables defined are private
-		super();
-		this.userId = userId;
-		this.username = username;
-		this.password = password;
-		this.email = email;
-		this.city = city;
+    private String username;
+    private String password;
+    private String city; 
+
+    public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getfirstName() {
+		return first_name;
+	}
+
+	public void setfirstName(String first_name) {
+		this.first_name = first_name;
+	}
+
+	public String getlastName() {
+		return last_name;
+	}
+
+	public void setlastName(String last_name) {
+		this.last_name = last_name;
 	}
 	
-	public long getUser_id() {
-		return userId;
-	}
-	public long getUserId() {
-		return userId;
-	}
-	public void setUserId(long userId) {
-		this.userId = userId;
-	}
 	public String getUsername() {
 		return username;
 	}
@@ -66,5 +69,21 @@ public class Customer {
 	public void setCity(String city) {
 		this.city = city;
 	}
+	
+	public User(){}
+
+	public User(int id, String first_name, String last_name, String email, String username, String password,
+			String city) {
+		super();
+		this.id = id;
+		this.first_name = first_name;
+		this.last_name = last_name;
+		this.email = email;
+		this.username = username;
+		this.password = password;
+		this.city = city;
+	}
+	
+	
 	
 }

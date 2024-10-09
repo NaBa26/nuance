@@ -16,7 +16,7 @@ import com.ecommerce.nuance.model.Book;
 import com.ecommerce.nuance.service.BookService;
 
 @RestController 
-@RequestMapping("/books")
+@RequestMapping("/api/books")
 public class BookController {
 
 	@Autowired

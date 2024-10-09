@@ -1,9 +1,2 @@
-The Controller is something where the orders and requests will come from the client to the server.
-We are using REST API so we will use the REST Controller.
-We have to create different methods specific to what will the web service calls when the user sends a request.
-The logic will be written inside the implementation class.
-Controller class will have the method names the same as they are in the service class.
-@RequestMapping is used to give the specify the base URL path.
 The <> long with RequestMapping would tell that what data type would be returned.
 build() keyword is used to finalize the creation of ResponseEntity instance.
-We don't use the new keyword along with the return statement in the http request is because 

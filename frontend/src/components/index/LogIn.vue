@@ -38,11 +38,11 @@ import { faXTwitter, faGoodreads, faGoogle } from '@fortawesome/free-brands-svg-
         </form>
 
             <div class="mt-3">
-              <p class="mb-5">Don't have an account? <router-link to="/signup" class="text-white-50 fw-bold">Sign Up</router-link></p>
+              <p class="mb-5" >Don't have an account? <router-link to="/signup" class="text-white-50 fw-bold">Sign Up</router-link></p>
             </div>
 
 
-            <p class="small mb-0"><a class="text-white-50" href="#!">Forgot password?</a></p>
+            <p class="small mb-0"><a class="text-white-50"href="#!">Forgot password?</a></p>
 
           </div>
         </div>

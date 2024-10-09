@@ -16,39 +16,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.nuance.exception.UserNotFoundException;
-import com.ecommerce.nuance.model.Customer;
-import com.ecommerce.nuance.service.CustomerService;
+import com.ecommerce.nuance.model.User;
+import com.ecommerce.nuance.service.UserService;
 
 @RestController
-@RequestMapping("/users")
-public class CustomerController {
+@RequestMapping("/api")
+public class UserController {
 
 	@Autowired
-	 private CustomerService userService;
+	 private UserService userService;
 
 	    @Autowired
-	    public CustomerController(CustomerService userService) {
+	    public UserController(UserService userService) {
 	        this.userService = userService;
 	    }
-	    
-	    @GetMapping
-	    public List<Customer> getAllUsers() {
-			return userService.getAllUsers();
-		}
-
-	    @GetMapping("/{userId}")
-	    public Optional<Customer> getUserById(@PathVariable String userId) {
-	        return this.userService.getUserById(Long.parseLong(userId));
-	    }
 	
-		@PostMapping(consumes = "application/json")
-	    public Customer createUser(@RequestBody Customer user) 
-		{
-			return this.userService.createUser(user);
+	    @PostMapping("/process-signup")
+	    public User createUser(@RequestBody User user) {
+	    	System.out.print(user);
+	        return this.userService.createUser(user);
 	    }
+
 
         @PutMapping("/{userId}")
-        public Customer updateUser(@PathVariable long userId, @RequestBody Customer updatedUser) throws UserNotFoundException 
+        public User updateUser(@PathVariable long userId, @RequestBody User updatedUser) throws UserNotFoundException 
         {
         	return this.userService.updateUser(userId, updatedUser);
         }

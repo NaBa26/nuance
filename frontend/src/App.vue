@@ -19,6 +19,7 @@ import Header from './components/Header.vue';
       <router-view name="book" />
       <router-view name="login" />
       <router-view name="signup" />
+      <router-view name="notfound" />
     </section>
   </main>
 

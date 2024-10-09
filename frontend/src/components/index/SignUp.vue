@@ -13,17 +13,17 @@ import { faXTwitter, faGoodreads, faGoogle } from '@fortawesome/free-brands-svg-
             style="backdrop-filter: blur(30px); max-height: 100%; overflow: auto;">
             <div class="card-body p-4 shadow-5 text-center" style="background-color: #212529;">
               <h2 class="fw-bold mb-4" style="color: #F0A500;">Sign up now!</h2>
-              <form>
+              <form @submit="handleSubmit">
                 <div class="row">
                   <div class="col-md-6 mb-3">
                     <div class="form-outline">
-                      <label class="form-label" for="firstName">First name</label>
+                      <label class="form-label" for="first_name">First name</label>
                       <input type="text" id="firstName" class="form-control" required />
                     </div>
                   </div>
                   <div class="col-md-6 mb-3">
                     <div class="form-outline">
-                      <label class="form-label" for="lastName">Last name</label>
+                      <label class="form-label" for="last_name">Last name</label>
                       <input type="text" id="lastName" class="form-control" required />
                     </div>
                   </div>
@@ -45,8 +45,8 @@ import { faXTwitter, faGoodreads, faGoogle } from '@fortawesome/free-brands-svg-
                 </div>
 
                 <div class="form-outline mb-3">
-                  <label class="form-label" for="confirmPassword">Confirm Password</label>
-                  <input type="password" id="confirmPassword" class="form-control" required />
+                  <label class="form-label" for="confirm_password">Confirm Password</label>
+                  <input type="password" id="confirm_password" class="form-control" required />
                 </div>
 
                 <div class="form-outline mb-4">
@@ -84,7 +84,41 @@ import { faXTwitter, faGoodreads, faGoogle } from '@fortawesome/free-brands-svg-
   </section>
 </template>
 
-<style scoped>
+<script>
+import { ref } from 'vue';
+import axios from 'axios';
+
+export default {
+  setup() {
+    const formData = ref({
+      first_name: '',
+      last_name: '',
+      email: '',
+      username: '',
+      password: '',
+      city: '',
+    });
+
+    const handleSubmit = async () => {
+      try {
+        const response = await axios.post('http://localhost:8080/api/process-signup', formData.value);
+        console.log('User signed up successfully:', response.data);
+        console.log(formData);
+      } catch (error) {
+        console.error('Error signing up:', error);
+      }
+    };
+
+    return {
+      formData,
+      handleSubmit,
+    };
+  },
+};
+</script>
+
+<style lang="css" scoped>
+
 .cascading-right {
   margin-right: -40px;
 }
