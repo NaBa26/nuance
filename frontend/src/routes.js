@@ -11,6 +11,9 @@ import NotFound from './components/NotFound.vue';
 
 
 const routes = [
+  { path: '/',
+    redirect: '/home', 
+  },
   { path: '/home',
     home:Home, 
     components: 
@@ -19,9 +22,6 @@ const routes = [
       header: Header,
       footer:Footer
     } 
-  },
-  { path: '/',
-    redirect: '/home', 
   },
   { path: '/books',
     name: 'Books',
@@ -35,14 +35,11 @@ const routes = [
   {
     path: '/books/:bookName',
     name: 'Book',
-    components: 
-    {
-      book:Book,
-      sidebar:Sidebar,
+    components: {
+      book: Book,
       header: Header,
-      footer:Footer
-    },
-    props: route=>({bookId:route.query.id})
+      footer: Footer
+    }
   },
   {
     path: '/login',

@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	
-	public Optional<User> getUserById(Long userId) //can't use long, use Long as ID is of generic type
+	public Optional<User> getUserById(Integer userId) //can't use long, use Long as ID is of generic type
 	{
 		return userRepository.findById(userId);
 	}
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 
-    public User updateUser(long userId,User updatedUser) throws UserNotFoundException 
+    public User updateUser(Integer userId,User updatedUser) throws UserNotFoundException 
     {
         
         return userRepository.findById(userId).map(user->{ 
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public void deleteUser(long userId) 
+    public void deleteUser(Integer userId) 
     {
 		userRepository.deleteById(userId);
     }
@@ -69,5 +69,23 @@ public class UserServiceImpl implements UserService {
     public List<User> findByCity(String city) {
         return userRepository.findByCity(city);
     }
+
+	@Override
+	public User updateUser(long userId, User updatedUser) throws UserNotFoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteUser(long long1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Optional<User> getUserById(Long long1) {
+		// TODO Auto-generated method stub
+		return Optional.empty();
+	}
 
 }

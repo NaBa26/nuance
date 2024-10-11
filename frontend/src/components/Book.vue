@@ -1,264 +1,210 @@
-<template>
-    <div class="main-content">
-
-        <!-- Left Column (Product Images) -->
-        <div class="left-column">
-            <img :src="`/assets/images/${books.image}`" :alt="books.name" class="book-image">
-            <div class="thumbnail-gallery">
-                <img src="https://via.placeholder.com/60x80" alt="Thumb1">
-                <img src="https://via.placeholder.com/60x80" alt="Thumb2">
-                <img src="https://via.placeholder.com/60x80" alt="Thumb3">
-            </div>
-        </div>
-
-        <!-- Middle Column (Product Info) -->
-        <div class="middle-column">
-            <h1>Book Title: Example Book</h1>
-            <p class="author">by Author Name</p>
-
-            <div class="ratings">
-                <img src="https://via.placeholder.com/100x20" alt="Ratings">
-                <span>(150 customer reviews)</span>
-            </div>
-
-            <p class="price">$19.99</p>
-
-            <ul class="features">
-                <li>Format: Hardcover</li>
-                <li>Language: English</li>
-                <li>Publisher: ABC Publishing</li>
-                <li>Page Count: 320 pages</li>
-            </ul>
-        </div>
-
-        <!-- Right Column (Buy Section) -->
-        <div class="right-column">
-            <p class="price">$19.99</p>
-            <button>Add to Bag</button>
-            <button class="buy-now">Buy Now</button>
-            <div class="delivery-info">
-                <p>Delivery: Free shipping on orders over $25</p>
-                <p>In Stock. Ships from and sold by BookStore.</p>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Product Details and Customer Reviews -->
-    <div class="product-details">
-        <div class="product-description">
-            <h2>Product Description</h2>
-            <p>This is a detailed description of the book. It provides information about the content, storyline, and
-                other relevant details.</p>
-        </div>
-
-        <div class="customer-reviews">
-            <h3>Customer Reviews</h3>
-            <p>This is where customer reviews and ratings would be displayed, with options to filter by rating or most recent.</p>
-        </div>
-    </div>
-</template>
-
 <script setup>
-import { onMounted, ref, watch, defineProps } from 'vue';
-import axios from 'axios';
+import { onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
+import axios from 'axios';
 
-// Define props
-const props = defineProps(['bookName', 'bookId']);
-const books = ref([]);
 const route = useRoute();
+const book = ref([]);
 
-const trimBookName = (bookName) => {
-  return bookName.trim().replace(/\s+/g, '-').toLowerCase();
-};
+const trimBookName = (name) => encodeURIComponent(name.trim());
 
-// Fetch book details on mounted
-onMounted(async () => {
-  const bookName = trimBookName(decodeURIComponent(props.bookName));
-  const bookId = props.bookId;
-
-  if (bookId && bookName) {
+const fetchBookDetails = async (name, id) => {
+  if (id && name) {
     try {
-      const url = `api/books/${bookName}/?id=${bookId}`;
+      const url = `http://localhost:8080/api/books/${trimBookName(name)}?id=${id}`;
       const response = await axios.get(url);
-      books.value = response.data;
-      console.log(books.value);
+      book.value = response.data;
+      console.log(book.value);
     } catch (error) {
       console.error('Error fetching book details:', error);
     }
   }
+};
+
+onMounted(() => {
+  const bookName = decodeURIComponent(route.params.bookName);
+  const bookId = route.query.id;
+  fetchBookDetails(bookName, bookId);
 });
 
-// Watch for route changes
 watch(
   () => route.params,
-  async (newParams) => {
-    const bookName = trimBookName(decodeURIComponent(newParams.bookName));
-    const bookId = newParams.bookId;
-
-    if (bookId && bookName) {
-      try {
-        const url = `api/books/${bookName}/?id=${bookId}`;
-        const response = await axios.get(url);
-        books.value = response.data;
-      } catch (error) {
-        console.error('Error fetching book details:', error);
-      }
-    }
+  (newParams) => {
+    const bookName = decodeURIComponent(newParams.bookName);
+    const bookId = route.query.id;
+    fetchBookDetails(bookName, bookId);
   },
   { immediate: true }
 );
+
 </script>
 
+<template>
+    <div class="main-content">
+      <div class="left-column">
+        <img :src="`/assets/images/${book.image}`" :alt="book.name" class="book-image">
+      </div>
+      <div class="middle-column">
+        <h1>{{ book.name }}</h1>
+        <p class="author">{{ book.author }}</p>
+        <div class="ratings">
+          <img src="https://via.placeholder.com/100x20" alt="Ratings">
+          <span>(150 customer reviews)</span>
+        </div>
+        <p class="price">${{ book.price }}</p>
+        <ul class="features">
+          <li>Format: Hardcover</li>
+          <li>Language: English</li>
+          <li>Published Date: {{ book.publishedDate }}</li>
+          <li>Genre: {{ book.genre }}</li>
+        </ul>
+      </div>
+      <div class="right-column">
+        <p class="price">${{ book.price }}</p>
+        <button>Add to Bag</button>
+        <button class="buy-now">Buy Now</button>
+        <div class="delivery-info">
+          <p>Delivery: Free shipping on orders over $25</p>
+          <p>In Stock. Ships from and sold by BookStore.</p>
+        </div>
+      </div>
+    </div>
+    <div class="product-details">
+      <div class="product-description">
+        <h2>Product Description</h2>
+        <p>This is a detailed description of the book. It provides information about the content, storyline, and other relevant details.</p>
+      </div>
+      <div class="customer-reviews">
+        <h3>Customer Reviews</h3>
+        <p>This is where customer reviews and ratings would be displayed, with options to filter by rating or most recent.</p>
+      </div>
+    </div>
+  </template>
+  
 
-<style>
-body {
-    font-family: Arial, sans-serif;
+  <style scoped>
+  body {
+    font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-}
-
-/* Header Styling */
-.header {
-    background-color: #232F3E;
-    padding: 10px 20px;
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.header .logo {
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.header .search-bar input {
-    padding: 8px;
-    width: 400px;
-}
-
-.header .nav-links {
-    display: flex;
-    gap: 20px;
-}
-
-.header .nav-links a {
-    color: white;
-    text-decoration: none;
-    padding: 5px 10px;
-}
-
-/* Main Content Styling */
-.main-content {
+    background-color: #f4f4f4; /* Soft background color */
+  }
+  
+  .main-content {
     display: flex;
     padding: 20px;
     gap: 40px;
-}
-
-.main-content .left-column img {
+    background-color: #ffffff; /* White background for main content */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  }
+  
+  .main-content .left-column img {
     width: 400px;
     height: auto;
-    border: 1px solid #ccc;
-}
-
-.main-content .thumbnail-gallery img {
-    width: 60px;
-    height: auto;
-    margin-top: 10px;
-    cursor: pointer;
-}
-
-.middle-column {
+    border: 1px solid #ccc; /* Light border */
+    border-radius: 8px; /* Rounded corners for images */
+  }
+  
+  .middle-column {
     flex-grow: 2;
-}
-
-.middle-column h1 {
-    font-size: 24px;
-}
-
-.middle-column .author {
-    color: #007185;
-    margin-top: -10px;
-}
-
-.middle-column .price {
-    font-size: 24px;
-    color: #B12704;
-    margin: 15px 0;
-}
-
-.middle-column .ratings {
+  }
+  
+  .middle-column h1 {
+    font-size: 30px; /* Larger font for title */
+    color: #1B263B; /* Primary dark color */
+    margin-bottom: 10px; /* Spacing below title */
+  }
+  
+  .middle-column .author {
+    color: #F0A500; /* Primary accent color */
+    margin-top: -5px; /* Minor adjustment for positioning */
+    font-style: italic; /* Italic for author name */
+  }
+  
+  .middle-column .price {
+    font-size: 28px; /* Larger font for price */
+    color: #B12704; /* Original price color */
+    margin: 10px 0;
+  }
+  
+  .middle-column .ratings {
     display: flex;
     align-items: center;
     gap: 10px;
-}
-
-.middle-column .ratings span {
+  }
+  
+  .middle-column .ratings span {
     font-size: 14px;
     color: #555;
-}
-
-.middle-column .features {
+  }
+  
+  .middle-column .features {
     list-style: none;
     padding: 0;
-}
-
-.middle-column .features li {
-    margin-bottom: 10px;
-}
-
-.right-column {
+    margin: 10px 0; /* Margin for spacing */
+  }
+  
+  .middle-column .features li {
+    margin-bottom: 8px; /* Spacing between features */
+  }
+  
+  .right-column {
     max-width: 300px;
     border: 1px solid #ddd;
     padding: 20px;
-    background-color: #f3f3f3;
-}
-
-.right-column .price {
-    font-size: 22px;
-    color: #B12704;
+    background-color: #F0A500; /* Primary accent color */
+    border-radius: 8px; /* Rounded corners */
+    color: #1B263B; /* Primary dark color */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  }
+  
+  .right-column .price {
+    font-size: 22px; /* Price font size */
     margin-bottom: 15px;
-}
-
-.right-column button {
+  }
+  
+  .right-column button {
     width: 100%;
     padding: 12px;
-    background-color: #FF9900;
+    background-color: #1B263B; /* Dark button background */
     color: white;
     border: none;
     margin-bottom: 10px;
     cursor: pointer;
-}
-
-.right-column button.buy-now {
-    background-color: #f0c14b;
-}
-
-.right-column .delivery-info {
-    font-size: 14px;
-    margin-top: 10px;
-}
-
-/* Product Details and Reviews */
-.product-details {
+    border-radius: 8px; /* Rounded corners */
+    transition: background-color 0.3s; /* Smooth transition */
+  }
+  
+  .right-column button:hover {
+    background-color: #0f1e28; /* Darker shade on hover */
+  }
+  
+  .right-column button.buy-now {
+    background-color: #f0c14b; /* Keep original for buy now */
+  }
+  
+  .product-details {
     margin-top: 40px;
     padding: 0 20px;
-}
-
-.product-description {
-    padding: 10px;
-    background-color: #f9f9f9;
+  }
+  
+  .product-description,
+  .customer-reviews {
+    padding: 15px;
+    background-color: #ffffff; /* White background for details */
     margin-bottom: 20px;
-}
-
-.customer-reviews {
-    padding: 10px;
-    background-color: #f9f9f9;
-}
-
-.customer-reviews h3 {
-    font-size: 18px;
-}
-</style>
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  }
+  
+  .product-description h2,
+  .customer-reviews h3 {
+    color: #1B263B; /* Primary dark color */
+  }
+  
+  .customer-reviews h3 {
+    margin-bottom: 10px; /* Space below heading */
+  }
+  </style>
+  

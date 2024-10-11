@@ -1,11 +1,10 @@
 package com.ecommerce.nuance.controller;
 
-
-
 import java.util.List;
-
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +32,13 @@ public class BookController {
 		}
 
 	    @GetMapping("/{bookName}")
-	    public Book getBookById(@PathVariable String bookName, @RequestParam("id") String bookId) {
-	        return this.bookService.getBookById(Integer.parseInt(bookId));
+	    public ResponseEntity<Book> getBookById(@PathVariable String bookName, @RequestParam("id") String bookId) {
+	        Optional<Book> bookOptional = this.bookService.getBookById(Integer.parseInt(bookId));
+	        if (bookOptional.isPresent()) {
+	            return ResponseEntity.ok(bookOptional.get());
+	        } else {
+	            return ResponseEntity.notFound().build();
+	        }
 	    }
+
 }

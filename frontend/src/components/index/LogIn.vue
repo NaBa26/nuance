@@ -15,13 +15,13 @@ import { faXTwitter, faGoodreads, faGoogle } from '@fortawesome/free-brands-svg-
 
              <form>
             <div class="form-outline form-white mb-4">
-              <label class="form-label" for="typeEmailX">Username</label>
-              <input type="text" id="typeEmailX" class="form-control form-control-lg" required />
+              <label class="form-label" for="typeUsername">Username</label>
+              <input type="text" id="typeUsername" class="form-control form-control-lg" required />
             </div>
 
             <div class="form-outline form-white mb-4">
-              <label class="form-label" for="typePasswordX">Password</label>
-              <input type="password" id="typePasswordX" class="form-control form-control-lg" required />
+              <label class="form-label" for="typePassword">Password</label>
+              <input type="password" id="typePassword" class="form-control form-control-lg" required />
             </div>
             
             <button data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-light btn-lg px-5" type="submit">Login</button>

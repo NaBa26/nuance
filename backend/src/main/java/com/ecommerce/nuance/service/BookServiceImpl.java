@@ -34,11 +34,9 @@ public class BookServiceImpl implements BookService {
 		return bookRepository.findAll();
 	}
 	
-	public Book getBookById(Integer bookId)
+	public Optional<Book> getBookById(Integer bookId)
 	{
-		System.out.println(bookRepository.findById(bookId));
-		return null;
-		//return bookRepository.findById(bookId);
+			return bookRepository.findById(bookId);
 	}
 	
 	

@@ -16,42 +16,37 @@ import { faXTwitter, faGoodreads, faGoogle } from '@fortawesome/free-brands-svg-
               <form @submit="handleSubmit">
                 <div class="row">
                   <div class="col-md-6 mb-3">
-                    <div class="form-outline">
-                      <label class="form-label" for="first_name">First name</label>
-                      <input type="text" id="firstName" class="form-control" required />
+                    <div class="form-outline form-white mb-4">
+                      <label class="form-label" for="first_name">First Name</label>
+                      <input type="text" id="first_name" class="form-control form-control-lg" required />
                     </div>
                   </div>
                   <div class="col-md-6 mb-3">
-                    <div class="form-outline">
-                      <label class="form-label" for="last_name">Last name</label>
-                      <input type="text" id="lastName" class="form-control" required />
+                    <div class="form-outline form-white mb-4">
+                      <label class="form-label" for="last_name">Last Name</label>
+                      <input type="text" id="last_name" class="form-control form-control-lg" required />
                     </div>
                   </div>
                 </div>
 
-                <div class="form-outline mb-3">
-                  <label class="form-label" for="email">Email address</label>
-                  <input type="email" id="email" class="form-control" required />
+                <div class="form-outline form-white mb-4">
+                  <label class="form-label" for="email">Email</label>
+                  <input type="email" id="email" class="form-control form-control-lg" required />
                 </div>
 
-                <div class="form-outline mb-3">
+                <div class="form-outline form-white mb-4">
                   <label class="form-label" for="username">Username</label>
-                  <input type="text" id="username" class="form-control" required />
+                  <input type="text" id="username" class="form-control form-control-lg" required />
                 </div>
 
-                <div class="form-outline mb-3">
+                <div class="form-outline form-white mb-4">
                   <label class="form-label" for="password">Password</label>
-                  <input type="password" id="password" class="form-control" required />
+                  <input type="password" id="password" class="form-control form-control-lg" required />
                 </div>
 
-                <div class="form-outline mb-3">
+                <div class="form-outline form-white mb-4">
                   <label class="form-label" for="confirm_password">Confirm Password</label>
-                  <input type="password" id="confirm_password" class="form-control" required />
-                </div>
-
-                <div class="form-outline mb-4">
-                  <label class="form-label" for="city">City</label>
-                  <input type="text" id="city" class="form-control" required />
+                  <input type="password" id="confirm_password" class="form-control form-control-lg" required />
                 </div>
 
                 <button data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-light btn-lg px-4"
@@ -59,7 +54,7 @@ import { faXTwitter, faGoodreads, faGoogle } from '@fortawesome/free-brands-svg-
 
                 <div class="d-flex justify-content-center mt-3">
                   <div class="auth-footer">
-                    <h6>Or login with</h6>
+                    <h6 style="color: white;">Or login with</h6>
                     <a href="#" class="text-decoration-none me-2">
                       <FontAwesomeIcon :icon="faGoogle" size="xl" />
                     </a>
@@ -72,6 +67,10 @@ import { faXTwitter, faGoodreads, faGoogle } from '@fortawesome/free-brands-svg-
                   </div>
                 </div>
               </form>
+
+              <div class="mt-3">
+              <p class="mb-5" style="color: white;">Already Registered? <router-link to="/login" class="text-white-50 fw-bold">Log In</router-link></p>
+            </div>
             </div>
           </div>
         </div>
@@ -118,7 +117,6 @@ export default {
 </script>
 
 <style lang="css" scoped>
-
 .cascading-right {
   margin-right: -40px;
 }
@@ -127,16 +125,6 @@ export default {
   .cascading-right {
     margin-right: 0;
   }
-}
-
-form {
-  padding: 0.75rem;
-  border-radius: 0.5rem;
-  color: #fff;
-}
-
-form input {
-  background-color: #2c2c2c;
 }
 
 .btn {
@@ -156,7 +144,27 @@ img {
   object-fit: cover;
 }
 
-.auth-footer a:hover{
+.auth-footer a:hover {
   color: white;
+}
+
+.form-outline {
+  margin-bottom: 1.5rem;
+}
+
+.form-control {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  background-color: #2c2c2c;
+  color: #fff;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  color: #fff;
+  margin-bottom: 0.5rem;
+  transition: color 0.2s ease;
 }
 </style>
