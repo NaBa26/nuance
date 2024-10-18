@@ -11,20 +11,17 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1B263B;">
     <div class="container-fluid">
-      
-      <!-- Logo and Brand Name -->
+
       <a class="navbar-brand d-flex align-items-center" href="#">
         <img src="/public/android-chrome-512x512.png" alt="logo" style="width:50px; height:50px;">
         <span class="ms-2" style="color: #F0A500;">nuance</span>
       </a>
 
-      <!-- Toggler for smaller screens -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <!-- Navbar Links -->
       <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
         <ul class="navbar-nav" style="font-size: 0.8rem;">
           <li class="nav-item">
@@ -40,7 +37,6 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
             <a class="nav-link" href="#">Staff Picks</a>
           </li>
 
-          <!-- Dropdown for Genres -->
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="genresDropdown" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">
@@ -61,7 +57,6 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
             </ul>
           </li>
 
-          <!-- Dropdown for Services -->
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">
@@ -87,14 +82,12 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
           </span>
         </div>
 
-
-        <!-- Right Side Icons -->
         <ul class="navbar-nav ms-auto" style="font-size: 0.8rem;">
           <li class="nav-item text-center me-2">
-            <a class="nav-link" href="#">
+            <router-link class="nav-link" to="/profile">
               <FontAwesomeIcon :icon="faUser" size="md" />
               <div>Profile</div>
-            </a>
+            </router-link>
           </li>
           <li class="nav-item text-center me-2">
             <a class="nav-link" href="#">
@@ -103,10 +96,10 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
             </a>
           </li>
           <li class="nav-item text-center me-2">
-            <a class="nav-link" href="#">
+            <router-link class="nav-link" to="/bag">
               <FontAwesomeIcon :icon="faShoppingBag" size="md" />
               <div>Bag</div>
-            </a>
+            </router-link>
           </li>
         </ul>
       </div>
@@ -131,7 +124,6 @@ export default {
     });
   },
 
-  // Submit option only to be enabled when the search bar has some value
   data() {
     return {
       searchQuery: ''

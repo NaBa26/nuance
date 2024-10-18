@@ -1,18 +1,14 @@
 package com.ecommerce.nuance.service;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.catalina.startup.Tomcat.ExistingStandardWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.ecommerce.nuance.exception.UserNotFoundException;
 import com.ecommerce.nuance.model.User;
 import com.ecommerce.nuance.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -20,55 +16,38 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 
 	@Autowired
-	public UserServiceImpl(UserRepository userRepository) // This constructor is created to automatically update the value in the repository class
-	{
+	public UserServiceImpl(UserRepository userRepository) {
 		this.userRepository = userRepository;
 	}
-	
-	public List<User> getAllUsers()
-	{
+
+	@Override
+	public List<User> getAllUsers() {
 		return userRepository.findAll();
 	}
-	
-	
-	public Optional<User> getUserById(Integer userId) //can't use long, use Long as ID is of generic type
-	{
-		return userRepository.findById(userId);
-	}
-	
-	
-	public User createUser(User user)
-	{
-		if(user!=null)
-		{
-		return userRepository.save(user);
+
+//    @Override
+//    public Optional<User> getUserById(Long userId) {
+//        return userRepository.findById(userId);
+//    }
+
+	@Override
+	public User createUser(User user) {
+		if (user != null) {
+			return userRepository.save(user);
 		}
 		return null;
 	}
-	
 
-    public User updateUser(Integer userId,User updatedUser) throws UserNotFoundException 
-    {
-        
-        return userRepository.findById(userId).map(user->{ 
-        	user.setCity(updatedUser.getCity());
-            user.setEmail(updatedUser.getEmail());
-            user.setPassword(updatedUser.getPassword());
-            user.setUsername(updatedUser.getUsername());
-            
-            return userRepository.save(user);
-        }).orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
-    }
-
-    @Transactional
-    public void deleteUser(Integer userId) 
-    {
-		userRepository.deleteById(userId);
-    }
-    
-    public List<User> findByCity(String city) {
-        return userRepository.findByCity(city);
-    }
+//    @Override
+//    public User updateUser(Long userId, User updatedUser) throws UserNotFoundException {
+//        return userRepository.findById(userId).map(user -> {
+//            user.setCity(updatedUser.getCity());
+//            user.setEmail(updatedUser.getEmail());
+//            user.setPassword(updatedUser.getPassword());
+//            user.setUsername(updatedUser.getUsername());
+//            return userRepository.save(user);
+//        }).orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
+//    }
 
 	@Override
 	public User updateUser(long userId, User updatedUser) throws UserNotFoundException {
@@ -79,7 +58,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void deleteUser(long long1) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -88,4 +67,9 @@ public class UserServiceImpl implements UserService {
 		return Optional.empty();
 	}
 
+	@Override
+	public User updateUser(Long userId, User updatedUser) throws UserNotFoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

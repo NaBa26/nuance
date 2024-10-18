@@ -20,6 +20,8 @@ import Header from './components/Header.vue';
       <router-view name="login" />
       <router-view name="signup" />
       <router-view name="notfound" />
+      <router-view name="bag" />
+      <router-view name="profile" />
     </section>
   </main>
 

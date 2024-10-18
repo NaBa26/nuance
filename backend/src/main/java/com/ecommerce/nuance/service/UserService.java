@@ -21,4 +21,6 @@ public interface UserService {
 
 	Optional<User> getUserById(Long long1);
 
+	User updateUser(Long userId, User updatedUser) throws UserNotFoundException;
+
 }

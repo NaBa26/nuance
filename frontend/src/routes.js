@@ -8,6 +8,8 @@ import Book from './components/Book.vue';
 import LogIn from './components/index/LogIn.vue';
 import SignUp from './components/index/SignUp.vue';
 import NotFound from './components/NotFound.vue';
+import Bag from './components/Bag.vue';
+import Profile from './components/Profile.vue';
 
 
 const routes = [
@@ -53,6 +55,24 @@ const routes = [
     name: 'SignUp',
     components: {
       signup: SignUp
+    }
+  },
+  {
+    path:'/bag',
+    name: 'Bag',
+    components:{
+      header:Header,
+      bag:Bag,
+      footer:Footer
+    }
+  },
+  {
+    path:'/profile',
+    name:'Profile',
+    components:{
+      header:Header,
+      profile:Profile,
+      footer:Footer
     }
   },
   {
