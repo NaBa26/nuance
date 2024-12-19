@@ -10,6 +10,7 @@ import SignUp from './components/index/SignUp.vue';
 import NotFound from './components/NotFound.vue';
 import Bag from './components/Bag.vue';
 import Profile from './components/Profile.vue';
+import OAuthRedirectHandler from './components/index/OAuthRedirectHandler.vue';
 
 
 const routes = [
@@ -73,6 +74,13 @@ const routes = [
       header:Header,
       profile:Profile,
       footer:Footer
+    }
+  },
+  {
+    path:'/login/oauth2/code/google',
+    name:OAuthRedirectHandler,
+    components:{
+      oAuthRedirectHandler:OAuthRedirectHandler
     }
   },
   {

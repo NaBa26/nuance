@@ -55,33 +55,42 @@ watch(
   <div>
     <h3 style="padding:1%">Search Results</h3>
     <hr>
-    <div v-if="books.length>0" class="cards-container">
+    <div v-if="books.length > 0" class="cards-container">
       <div v-for="book in books" :key="book.id" class="book-card">
-        <router-link 
-          class="book-image-container" 
-          :to="`/books/${encodeURIComponent(book.name.toLowerCase())}?id=${book.id}`">
-          <img :src="`/assets/images/${book.image}`" :alt="book.name" class="book-image">
+        <!-- Router link wrapping the card -->
+        <router-link
+          :to="`/books/${encodeURIComponent(book.name.toLowerCase())}?id=${book.id}`"
+          class="card-link"
+        >
+          <div class="book-image-container">
+            <img
+              :src="`/assets/images/${book.image}`"
+              :alt="book.name"
+              class="book-image"
+            />
+          </div>
+          <div class="book-description">
+            <div class="book-title">{{ book.name }}</div>
+            <div class="book-author">
+              <span>by </span><b>{{ book.author }}</b>
+            </div>
+            <div class="book-price">$ {{ book.price }}</div>
+            <div class="book-original-price">
+              $ {{ getOriginalPrice(book.price) }}
+            </div>
+            <div class="book-discount">
+              ({{ calculateDiscount(book.price, getOriginalPrice(book.price)) }}%
+              off)
+            </div>
+          </div>
         </router-link>
-        <div class="book-description">
-          <router-link 
-            class="book-title" 
-            :to="`/books/${encodeURIComponent(book.name.toLowerCase())}?id=${book.id}`">
-            {{ book.name }}
-          </router-link>
-          <div class="book-author">
-            <span>by </span><b>{{ book.author }}</b>
-          </div>
-          <div class="book-price">
-            $ {{ book.price }}
-          </div>
-          <div class="book-original-price">
-            $ {{ getOriginalPrice(book.price) }}
-          </div>
-          <div class="book-discount">
-            ({{ calculateDiscount(book.price, getOriginalPrice(book.price)) }}% off)
-          </div>
-          <button class="add-to-cart-btn">Add to Bag</button>
-        </div>
+        <!-- Add to Cart button -->
+        <router-link
+          :to="`/cart/add/${book.id}`"
+          class="add-to-cart-btn"
+        >
+          Add to Cart
+        </router-link>
       </div>
     </div>
   </div>
@@ -110,6 +119,18 @@ watch(
   text-align: center;
 }
 
+.card-link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.card-link:focus, .card-link:hover {
+  text-decoration: none;
+}
+
 .book-description {
   flex-grow: 1;
   margin-top: 10px;
@@ -127,6 +148,8 @@ watch(
   font-size: 1em;
   align-self: center;
   margin-top: auto;
+  text-decoration: none;
+  text-align: center;
 }
 
 .add-to-cart-btn:hover {

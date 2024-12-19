@@ -13,7 +13,7 @@ import Header from './components/Header.vue';
       <router-view name="sidebar" />
     </aside>
 
-    <section style="flex-grow: 1;" >
+    <section style="display: flex; flex-grow: 1; width: 100vw; height: 100vh; overflow: auto;">
       <router-view name="books" />
       <router-view name="home" />
       <router-view name="book" />
@@ -22,11 +22,12 @@ import Header from './components/Header.vue';
       <router-view name="notfound" />
       <router-view name="bag" />
       <router-view name="profile" />
+      <router-view name="oAuthRedirectHandler" />
     </section>
+
   </main>
 
   <footer>
     <router-view name="footer" />
   </footer>
 </template>
-

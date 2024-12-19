@@ -1,5 +1,9 @@
 package com.ecommerce.nuance.model;
 
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,20 +16,26 @@ public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private long id;
 	
+	@Column(name="first_name")
 	private String first_name;
+	
+	@Column(name="last_name")
     private String last_name;
+	
     private String email;
     private String username;
     private String password;
+    
+    @Column(name="city")
     private String city; 
 
-    public int getId() {
+    public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -72,7 +82,7 @@ public class User {
 	
 	public User(){}
 
-	public User(int id, String first_name, String last_name, String email, String username, String password,
+	public User(long id, String first_name, String last_name, String email, String username, String password,
 			String city) {
 		super();
 		this.id = id;

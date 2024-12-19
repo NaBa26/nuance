@@ -1,43 +1,55 @@
 <template>
-    <div id="carouselExampleIndicators" class="carousel slide d-flex justify-content-center align-items-center" style="height: 100vh;">
-        <!-- Carousel Indicators -->
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
-                aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
-                aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
-                aria-label="Slide 3"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3"
-                aria-label="Slide 4"></button>
-        </div>
-
-        <!-- Carousel Inner -->
-        <div class="carousel-inner" style="width: 50%; height: 50%;">
+    <div id="carouselExampleAutoplaying" class="carousel slide banner-carousel justify-content-center" data-bs-ride="carousel">
+        <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="/public/assets/images/first_time_buyers.jpg" class="d-block w-100" alt="first_time_buyer">
+                <div class="banner-image-wrapper">
+                    <img src="/public/assets/images/bg_images/31286.jpg" class="d-block w-60 banner-image" alt="Custom">
+                </div>
             </div>
             <div class="carousel-item">
-                <img src="/public/assets/images/best_seller.jpg" class="d-block w-100" alt="best_seller">
+                <div class="banner-image-wrapper">
+                    <img src="/public/assets/images/bg_images/gift_packages.jpg" class="d-block w-60 banner-image" alt="George RR Martin">
+                </div>
             </div>
             <div class="carousel-item">
-                <img src="/public/assets/images/george_rr_martin.jpg" class="d-block w-100" alt="event">
-            </div>
-            <div class="carousel-item">
-                <img src="/public/assets/images/custom.jpg" class="d-block w-100" alt="gift_package">
+                <div class="banner-image-wrapper">
+                    <img src="/public/assets/images/bg_images/well_known.jpg" class="d-block w-60 banner-image" alt="Best Seller">
+                </div>
             </div>
         </div>
-
-        <!-- Carousel Controls -->
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
-            data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: rgba(0, 0, 0, 0.5);"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
-            data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: rgba(0, 0, 0, 0.5);"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
     </div>
 </template>
+
+<style scoped>
+.banner-carousel {
+    height: 800px;
+    overflow: hidden;
+    padding: 2%;
+}
+
+.banner-image-wrapper {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+.banner-image {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+}
+
+.banner-image-wrapper::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 45%;
+    background: linear-gradient(to top, rgba(255, 255, 255, 100), rgba(255, 255, 255, 0));
+}
+
+.carousel-inner {
+    height: 100%;
+}
+</style>

@@ -1,27 +1,30 @@
 <script setup>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faXTwitter, faGoodreads, faGoogle } from '@fortawesome/free-brands-svg-icons';
+import { ref } from 'vue';
+import axios from 'axios';
+import { useRouter } from 'vue-router';
 </script>
 
 <template>
-<section class="vh-100" style="background-color: #1B263B;">
-  <div class="container py-5 h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+<section class="fullscreen" style="background-color: #1B263B;">
+  <div class="container centered-content">
+    <div class="row justify-content-center align-items-center" style="width: 60vw;">
+      <div class="col-12 col-sm-10 col-md-8 col-lg-6">
         <div class="card bg-dark text-white" style="border-radius: 1rem;">
           <div class="card-body p-5 text-center">
             <h2 class="fw-bold mb-4 text-uppercase" style="color: #F0A500">Login</h2>
             <p class="text-white-50 mb-5">Please enter your username and password!</p>
 
-             <form>
+             <form @submit.prevent="handleLogin">
             <div class="form-outline form-white mb-4">
-              <label class="form-label" for="typeUsername">Username</label>
-              <input type="text" id="typeUsername" class="form-control form-control-lg" required />
+              <label class="form-label" for="username">Username</label>
+              <input v-model="formData.username" type="text" id="username" name="username" class="form-control form-control-lg" required />
             </div>
 
             <div class="form-outline form-white mb-4">
-              <label class="form-label" for="typePassword">Password</label>
-              <input type="password" id="typePassword" class="form-control form-control-lg" required />
+              <label class="form-label" for="password">Password</label>
+              <input v-model="formData.password" type="password" id="password" name="password" class="form-control form-control-lg" required />
             </div>
             
             <button data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-light btn-lg px-5" type="submit">Login</button>
@@ -29,7 +32,7 @@ import { faXTwitter, faGoodreads, faGoogle } from '@fortawesome/free-brands-svg-
             <div class="d-flex justify-content-center mt-4">
                 <div class="auth-footer">
                     <h6>Or login with</h6>
-                        <a href="/oauth2/authorization/google" class="text-decoration-none me-2"><FontAwesomeIcon :icon="faGoogle" size="xl" /></a>
+                        <a href="http://localhost:8080/oauth2/authorization/google" class="text-decoration-none me-2"><FontAwesomeIcon :icon="faGoogle" size="xl" /></a>
                         <a href="#" class="text-decoration-none me-2"><FontAwesomeIcon :icon="faXTwitter" size="xl" /></a>
                         <a href="#" class="text-decoration-none me-2"><FontAwesomeIcon :icon="faGoodreads" size="xl" /></a>
                 </div>
@@ -42,7 +45,7 @@ import { faXTwitter, faGoodreads, faGoogle } from '@fortawesome/free-brands-svg-
             </div>
 
 
-            <p class="small mb-0"><a class="text-white-50"href="#!">Forgot password?</a></p>
+            <p class="small mb-0"><a class="text-white-50" href="#!">Forgot password?</a></p>
 
           </div>
         </div>
@@ -52,7 +55,61 @@ import { faXTwitter, faGoodreads, faGoogle } from '@fortawesome/free-brands-svg-
 </section>
 </template>
 
+<script>
+const formData=ref(
+  {
+    username:'',
+    password:''
+  }
+);
+
+const errorMessage = ref('');
+const successMessage = ref('');
+const router=useRouter();
+
+const handleLogin = async () => {
+  errorMessage.value='';
+  successMessage.value='';
+
+  try {
+    const response = await axios.post('http://localhost:8080/api/process-login', formData.value);
+    if (response.status === 200) {
+      const userId = response.data.id;
+      window.location.href = 'http://localhost:5173/home';
+    }
+} catch (error) {
+    if (error.response) {
+        if (error.response.status === 404) {
+            errorMessage.value = 'User not found.';
+        } else if (error.response.status === 401) {
+            errorMessage.value = 'Incorrect password.';
+        } else {
+            errorMessage.value = 'An error occurred: ' + (error.response.data || 'Unknown error.');
+        }
+    } else {
+        errorMessage.value = 'An error occurred: ' + error.message;
+    }
+}
+
+
+}
+</script>
+
 <style scoped>
+.fullscreen {
+  width: 100vw; 
+  height: 100vh; 
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.centered-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
 .form-outline {
   margin-bottom: 1.5rem;
 }

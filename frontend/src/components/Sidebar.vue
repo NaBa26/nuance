@@ -75,7 +75,7 @@
 <style lang="css" scoped>
 .sidebar {
   width: 250px;
-  padding: 1rem;
+  padding: 1.5rem;
   border-right: 1px solid #ddd;
   background-color: #f9f9f9;
   height: 100vh;
@@ -93,6 +93,7 @@
   font-weight: 600;
   border-bottom: 2px solid #F0A500; /* Underline for section headers */
   padding-bottom: 5px;
+  font-size: 1rem;
 }
 
 .filter-list {

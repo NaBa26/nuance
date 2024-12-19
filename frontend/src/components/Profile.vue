@@ -50,7 +50,7 @@
   
   <style scoped>
   .profile-container {
-    background-image: url('/assets/images/bg_images/profile_bg.jpg');
+
     background-size: cover;
     background-position: center;
     min-height: 100vh;

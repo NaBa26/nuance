@@ -3,8 +3,15 @@
 </script>
 
 <template>
-    <main>
+    <main class="container">
         <Carousel />
     </main>
     
 </template>
+
+<style scoped>
+.container{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+</style>

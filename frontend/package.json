@@ -17,9 +17,12 @@
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/vue-fontawesome": "^3.0.8",
     "@mui/material": "^5.16.7",
-    "axios": "^1.7.2",
+    "axios": "^1.7.7",
     "bootstrap-icons": "^1.11.3",
     "frontend": "file:",
+    "toastification": "^0.1.5",
+    "util": "^0.12.5",
+    "vee-validate": "^4.14.7",
     "vue": "^3.4.21",
     "vue-router": "^4.4.3"
   },
