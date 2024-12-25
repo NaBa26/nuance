@@ -13,6 +13,7 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
+    width: 100vw;
     background-color: #1B263B; /* Dark blue */
     color: white;
     text-align: center;

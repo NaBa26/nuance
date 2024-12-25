@@ -7,6 +7,7 @@ import com.ecommerce.nuance.model.User;
 import com.ecommerce.nuance.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -78,7 +79,12 @@ public class UserServiceImpl implements UserService {
 	    return new LoginResult(userOpt, "Success");
 	}
 
-
+	@Override
+	public void updatePassword(String recipient, String tempPassword) {
+		User existingUser = userRepository.findByEmail(recipient).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+		existingUser.setPassword(encoder.encode(tempPassword));
+		userRepository.save(existingUser);
+	}
 
 	@Override
 	public User updateUser(Long userId, User updatedUser) throws UserNotFoundException {

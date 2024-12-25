@@ -1,17 +1,19 @@
 package com.ecommerce.nuance.controller;
 
-import com.ecommerce.nuance.configuration.JwtTokenProvider;
 import com.ecommerce.nuance.dto.LoginResult;
+import com.ecommerce.nuance.dto.SessionManagement;
 import com.ecommerce.nuance.exception.UserNotFoundException;
 import com.ecommerce.nuance.model.User;
 import com.ecommerce.nuance.service.UserService;
 
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.data.auditing.CurrentDateTimeProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -22,11 +24,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class UserController {
 
-	    private final JwtTokenProvider jwtTokenProvider;
 	    private final UserService userService;
 
-	    public UserController(JwtTokenProvider jwtTokenProvider, UserService userService) {
-	        this.jwtTokenProvider = jwtTokenProvider;
+	    public UserController(UserService userService) {
 	        this.userService = userService;
 	    }
    
@@ -45,7 +45,13 @@ public class UserController {
     }
     
     @PostMapping("/process-login")
-    public ResponseEntity<?> loginUser(@RequestBody User user, HttpServletResponse response) {
+    public ResponseEntity<?> loginUser(@RequestBody User user, HttpSession session) {
+        // Check if the user is already logged in
+        if (SessionManagement.isSessionValid(session)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User is already logged in.");
+        }
+
+        // Verify credentials
         LoginResult result = userService.verifyCredentials(user.getUsername(), user.getPassword());
 
         switch (result.getMessage()) {
@@ -58,13 +64,35 @@ public class UserController {
             case "Success":
                 Optional<User> authenticatedUser = result.getUser();
                 authenticatedUser.ifPresent(u -> u.setPassword(null)); // Exclude password for safety
-                String token = jwtTokenProvider.generateToken(authenticatedUser.get().getUsername(), authenticatedUser.get().getId());
-                response.addHeader("Authorization", "Bearer " + token);
+                SessionManagement.setUsername(session, authenticatedUser.get().getUsername());
                 return ResponseEntity.ok(authenticatedUser);
 
             default:
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error");
         }
+    }
+
+    
+    @GetMapping("/check-session")
+    public ResponseEntity<Map<String, Boolean>> checkSession(HttpSession session) {
+        boolean isActive = SessionManagement.isSessionValid(session);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("active", isActive);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Map<String, String>> logout(HttpSession session) {
+        if (!SessionManagement.isSessionValid(session)) {
+        	System.out.println("No active session found");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "No active session found."));
+        }
+
+        SessionManagement.invalidateSession(session);   
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Logged out successfully");
+        System.out.println("Logged out successfully");
+        return ResponseEntity.ok(response);
     }
 
 

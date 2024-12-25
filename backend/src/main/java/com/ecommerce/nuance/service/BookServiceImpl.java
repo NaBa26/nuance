@@ -1,6 +1,7 @@
 package com.ecommerce.nuance.service;
 
 
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -73,4 +74,16 @@ public class BookServiceImpl implements BookService {
     {
     	return bookRepository.findByPriceLessThanEqual(price);
     }
+
+
+	@Override
+	public List<Book> getBookByGenre(String genre) {
+		return bookRepository.findByGenre(genre);
+	}
+
+
+	@Override
+	public Optional<Book> getBookByNameAndId(String bookName, Long id) {
+	    return bookRepository.findByIdAndName(id, bookName);
+	}
 }

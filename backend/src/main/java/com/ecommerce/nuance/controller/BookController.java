@@ -27,13 +27,17 @@ public class BookController {
 	    }
 	    
 	    @GetMapping()
-	    public List<Book> getAllBooks() {
-			return bookService.getAllBooks();
-		}
+	    public ResponseEntity<List<Book>> getBooks() {
+	        List<Book> books;
+	        books = bookService.getAllBooks();
+	        return ResponseEntity.ok(books);
+	    }
+
+
 
 	    @GetMapping("/{bookName}")
 	    public ResponseEntity<Book> getBookById(@PathVariable String bookName, @RequestParam("id") String bookId) {
-	        Optional<Book> bookOptional = this.bookService.getBookById(Integer.parseInt(bookId));
+	        Optional<Book> bookOptional = bookService.getBookById(Integer.parseInt(bookId));
 	        if (bookOptional.isPresent()) {
 	            return ResponseEntity.ok(bookOptional.get());
 	        } else {

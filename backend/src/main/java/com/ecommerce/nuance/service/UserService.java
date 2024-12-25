@@ -24,4 +24,6 @@ public interface UserService {
 
 	LoginResult verifyCredentials(String username, String password);
 
+	public void updatePassword(String recipient, String tempPassword);
+
 }

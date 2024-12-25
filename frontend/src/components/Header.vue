@@ -4,6 +4,42 @@ import { faUser } from '@fortawesome/free-regular-svg-icons';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { faShoppingBag } from '@fortawesome/free-solid-svg-icons';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faPhone } from '@fortawesome/free-solid-svg-icons';
+import { onMounted, ref } from 'vue';
+import axios from 'axios';
+
+const session = ref(false);
+const errorMessage = ref('');
+
+const checkSession = async () => {
+  try {
+    const response = await axios.get('http://localhost:8080/api/check-session');
+    session.value = response.data.active;
+  } catch (error) {
+    errorMessage.value = 'Failed to check session: ' + error.message;
+  }
+};
+
+const logOut = async () => {
+  try {
+    const response = await axios.post('http://localhost:8080/api/logout');
+    if (response.status === 200) {
+      alert('Logging out...');
+      window.location.href = 'http://localhost:5173/home';
+    }
+  } catch (error) {
+    if (error.response) {
+      errorMessage.value = error.response.data.message || 'Logout failed';
+    } else {
+      errorMessage.value = 'An error occurred: ' + error.message;
+    }
+  }
+};
+
+onMounted(() => {
+  checkSession();
+  console.log(session.value);
+});
 </script>
 
 <template>
@@ -18,8 +54,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
       </a>
 
       <!-- Navbar Toggler for Mobile -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
@@ -38,58 +73,24 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
           <li class="nav-item">
             <a class="nav-link" href="#">Staff Picks</a>
           </li>
-
-          <!-- Dropdown for Genres -->
-          <li class="nav-item dropdown">
-            <button class="nav-link dropbtn" id="genresDropdown" role="button" data-bs-toggle="dropdown"
-              aria-expanded="false">
-              Genres
-            </button>
-            <ul class="dropdown-content" aria-labelledby="genresDropdown">
-              <li><a class="dropdown-item" href="#">Historical Fiction</a></li>
-              <li><a class="dropdown-item" href="#">Graphic Novels</a></li>
-              <li><a class="dropdown-item" href="#">Fantasy</a></li>
-              <li><a class="dropdown-item" href="#">Romance</a></li>
-              <li><a class="dropdown-item" href="#">Self Help Books</a></li>
-              <li><a class="dropdown-item" href="#">Science Fiction</a></li>
-              <li><a class="dropdown-item" href="#">Non-Fiction</a></li>
-                <hr class="dropdown-divider">
-              <li><router-link class="dropdown-item" to="/books">More Genres</router-link></li>
-            </ul>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/books">Books list</router-link>
           </li>
-
-          <!-- Dropdown for Services -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropbtn" id="servicesDropdown" role="button" data-bs-toggle="dropdown"
-              aria-expanded="false" href="#">
-              Services
-            </a>
-            <ul class="dropdown-content" aria-labelledby="servicesDropdown">
-              <li><a class="dropdown-item" href="#">Book Clubs</a></li>
-              <li><a class="dropdown-item" href="#">Events</a></li>
-              <li><a class="dropdown-item" href="#">Gift Cards</a></li>
-              <li><a class="dropdown-item" href="#">Author Signings</a></li>
-                <hr class="dropdown-divider">
-              <li><router-link class="dropdown-item" to="#">Contact Us</router-link></li>
-            </ul>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/books">Events</router-link>
           </li>
         </ul>
 
-        <!-- Search Bar -->
-        <div class="searchBar-container d-none d-lg-flex justify-content-center align-items-center">
-          <input placeholder="Search for authors, titles and genres" class="desktop-searchBar" v-model="searchQuery">
-          <span @click="searchValue" class="search-icon">
-            <FontAwesomeIcon :icon="faSearch" size="lg" style="color: #fff;" />
-          </span>
-        </div>
-
         <!-- Profile, Wishlist, and Bag Icons -->
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item text-center me-2">
-            <router-link class="nav-link" to="/profile">
+          <li class="nav-item dropdown text-center me-2">
+            <a class="nav-link" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">
               <FontAwesomeIcon :icon="faUser" size="md" />
               <div>Profile</div>
-            </router-link>
+            </a>
+            <ul class="dropdown-content" aria-labelledby="profileDropdown">
+              <li><router-link class="dropdown-item" to="/login">LogIn</router-link></li>
+            </ul>
           </li>
           <li class="nav-item text-center me-2">
             <a class="nav-link" href="#">
@@ -103,6 +104,12 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
               <div>Bag</div>
             </router-link>
           </li>
+          <li class="nav-item text-center me-2">
+            <router-link class="nav-link" to="/contact_us">
+              <FontAwesomeIcon :icon="faPhone" size="md" />
+              <div>Contact Us</div>
+            </router-link>
+          </li>
         </ul>
       </div>
     </div>
@@ -110,15 +117,47 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 </template>
 
 <style scoped>
-/* Common styles for navbar links */
 .navbar-nav .nav-item .nav-link {
-  color: #fff; /* Default text color */
-  transition: color 0.3s ease; /* Smooth transition for color */
+  color: #fff;
+  transition: color 0.3s ease;
+}
+
+/* Header stays fixed at the top */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px; /* Ensure a fixed height */
+  z-index: 1000;
+  box-shadow: 0 4px 2px -2px gray;
+  background-color: rgba(0, 0, 0, 0.8); /* Add a background to avoid transparency issues */
+}
+
+/* Add padding to the section */
+section {
+  padding-top: 60px; /* Match the height of the header */
+}
+
+.navbar-nav .nav-link {
+  margin-right: 15px;
+  position: relative;
+  text-transform: uppercase;
+  font-weight: 200;
+  font-family: 'Merriweather', serif;
+  letter-spacing: 1px;
+  color: #fff;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #F0A500;
+  transform: scale(1.1);
 }
 
 .navbar-nav .nav-item .nav-link .fa {
-  color: inherit; /* Ensure icons inherit the same color as text */
-  transition: color 0.3s ease; /* Smooth transition for icon color */
+  color: inherit;
+  transition: color 0.3s ease;
 }
 
 .dropdown-content {
@@ -128,27 +167,6 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 .dropdown-content li {
   list-style: none;
-}
-
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000; /* Ensures the navbar stays on top of other elements */
-  box-shadow: 0 4px 2px -2px gray; /* Optional: Adds a subtle shadow under the navbar */
-}
-
-/* Navbar styling */
-.navbar-nav .nav-link {
-  margin-right: 15px;
-  position: relative;
-  text-transform: uppercase;
-  font-weight: 600;
-  font-family: 'Poppins', sans-serif;
-  letter-spacing: 1px;
-  color: #fff;
-  transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .navbar-nav .nav-link:hover {
@@ -164,43 +182,6 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
   width: 100%;
   height: 3px;
   background-color: #F0A500;
-}
-
-.searchBar-container {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  margin: 0 20px;
-}
-
-.searchBar-container input {
-  width: 90%;
-  height: 40px;
-  border-radius: 20px 0 0 20px;
-  padding: 0 10px;
-  border: 1px solid #ccc;
-  outline: none;
-  transition: border-color 0.3s ease;
-}
-
-.searchBar-container input:focus {
-  border-color: #F0A500;
-}
-
-.searchBar-container span {
-  background-color: #F0A500;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  border-radius: 0 20px 20px 0;
-  transition: background-color 0.3s ease;
-}
-
-.searchBar-container span:hover {
-  background-color: #1B263B;
 }
 
 .navbar-nav .dropdown-content {
@@ -248,7 +229,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 .brand-name {
   font-size: 2rem;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Merriweather', serif;
   color: #fff;
 }
 
@@ -259,13 +240,13 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 @media (max-width: 992px) {
   .searchBar-container {
-    display: none; /* Hide search on smaller screens */
+    display: none;
   }
 }
 
 @media (max-width: 576px) {
   .navbar-nav .nav-link {
-    font-size: 0.9rem; /* Adjust font size for smaller screens */
+    font-size: 0.9rem;
   }
 
   .searchBar-container input {
@@ -273,4 +254,3 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
   }
 }
 </style>
-

@@ -12,12 +12,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final JwtTokenProvider jwtTokenProvider;
-
-    public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
-
     // Password Encoder Bean
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -27,20 +21,22 @@ public class SecurityConfig {
     // Security Filter Chain
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // Adding JWT authentication filter
-        http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
-
         // Configure HTTP security
         http.csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(authorizeRequests ->
-                authorizeRequests.anyRequest().permitAll()
-                .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class))
+            .authorizeHttpRequests(authorizeRequests -> 
+                authorizeRequests
+                    .requestMatchers("/api/process-login", "/api/process-signup", "/api/books", "/api/home", "/api/email/forgot-password", "/api/check-session", "/api/check-auth").permitAll()
+                    .anyRequest().authenticated())
             .oauth2Login(oauth2Login -> oauth2Login
-                .loginPage("/login") // Custom login page
-                .defaultSuccessUrl("/api/home", true) // Redirect after successful login
-            );
+                .loginPage("/api/process-login") // Custom login page
+                .defaultSuccessUrl("/api/home", true)) // Redirect after successful login
+            .logout(logout -> logout
+                .logoutUrl("/api/logout") // Define the logout URL
+                .logoutSuccessUrl("/api/home") // Redirect after successful logout
+                .invalidateHttpSession(true) // Invalidate the session after logout
+                .clearAuthentication(true)); // Clear authentication information
 
         return http.build();
     }
+
 }

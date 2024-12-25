@@ -3,7 +3,40 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faXTwitter, faGoodreads, faGoogle } from '@fortawesome/free-brands-svg-icons';
 import { ref } from 'vue';
 import axios from 'axios';
-import { useRouter } from 'vue-router';
+
+const formData=ref(
+  {
+    username:'',
+    password:''
+  }
+);
+
+const errorMessage = ref('');
+const successMessage = ref('');
+
+const handleLogin = async () => {
+  errorMessage.value='';
+  successMessage.value='';
+
+  try {
+    const response = await axios.post('http://localhost:8080/api/process-login', formData.value);
+    if (response.status === 200) {
+      window.location.href = 'http://localhost:5173/home';
+    }
+} catch (error) {
+    if (error.response) {
+        if (error.response.status === 404) {
+            errorMessage.value = 'User not found.';
+        } else if (error.response.status === 401) {
+            errorMessage.value = 'Incorrect password.';
+        } else {
+            errorMessage.value = 'An error occurred: ' + (error.response.data || 'Unknown error.');
+        }
+    } else {
+        errorMessage.value = 'An error occurred: ' + error.message;
+    }
+}
+}
 </script>
 
 <template>
@@ -13,6 +46,8 @@ import { useRouter } from 'vue-router';
       <div class="col-12 col-sm-10 col-md-8 col-lg-6">
         <div class="card bg-dark text-white" style="border-radius: 1rem;">
           <div class="card-body p-5 text-center">
+            <img src="/apple-touch-icon.png" alt="logo" class="logo-img" />
+            <hr>
             <h2 class="fw-bold mb-4 text-uppercase" style="color: #F0A500">Login</h2>
             <p class="text-white-50 mb-5">Please enter your username and password!</p>
 
@@ -45,7 +80,7 @@ import { useRouter } from 'vue-router';
             </div>
 
 
-            <p class="small mb-0"><a class="text-white-50" href="#!">Forgot password?</a></p>
+            <p class="small mb-0"><router-link class="text-white-50" to="/forgot_password">Forgot password?</router-link></p>
 
           </div>
         </div>
@@ -54,46 +89,6 @@ import { useRouter } from 'vue-router';
   </div>
 </section>
 </template>
-
-<script>
-const formData=ref(
-  {
-    username:'',
-    password:''
-  }
-);
-
-const errorMessage = ref('');
-const successMessage = ref('');
-const router=useRouter();
-
-const handleLogin = async () => {
-  errorMessage.value='';
-  successMessage.value='';
-
-  try {
-    const response = await axios.post('http://localhost:8080/api/process-login', formData.value);
-    if (response.status === 200) {
-      const userId = response.data.id;
-      window.location.href = 'http://localhost:5173/home';
-    }
-} catch (error) {
-    if (error.response) {
-        if (error.response.status === 404) {
-            errorMessage.value = 'User not found.';
-        } else if (error.response.status === 401) {
-            errorMessage.value = 'Incorrect password.';
-        } else {
-            errorMessage.value = 'An error occurred: ' + (error.response.data || 'Unknown error.');
-        }
-    } else {
-        errorMessage.value = 'An error occurred: ' + error.message;
-    }
-}
-
-
-}
-</script>
 
 <style scoped>
 .fullscreen {

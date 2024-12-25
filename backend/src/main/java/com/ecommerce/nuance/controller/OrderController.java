@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.nuance.exception.OrderNotFoundException;
 import com.ecommerce.nuance.model.Order;
-import com.ecommerce.nuance.model.User;
 import com.ecommerce.nuance.service.OrderService;
 
 @RestController
@@ -27,7 +26,6 @@ public class OrderController {
 	@Autowired
 	 private final OrderService orderService;
 
-	    @Autowired
 	    public OrderController(OrderService orderService) {
 	        this.orderService = orderService;
 	    }

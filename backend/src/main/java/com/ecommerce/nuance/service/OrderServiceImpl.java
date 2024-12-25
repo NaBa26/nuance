@@ -18,7 +18,6 @@ public class OrderServiceImpl implements OrderService {
 
 	private final OrderRepository orderRepository;
 
-	@Autowired
 	public OrderServiceImpl(OrderRepository orderRepository) // This constructor is created to automatically update the value in the repository class
 	{
 		this.orderRepository = orderRepository;

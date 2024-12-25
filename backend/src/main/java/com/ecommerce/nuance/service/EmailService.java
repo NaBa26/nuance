@@ -5,5 +5,6 @@ import com.ecommerce.nuance.model.Email;
 
 public interface EmailService {
 
-	ResponseEntity<?> sendforgotPasswordMail(Email details);
+	boolean userExists(String email);
+	ResponseEntity<?> sendforgotPasswordMail(String email);
 }

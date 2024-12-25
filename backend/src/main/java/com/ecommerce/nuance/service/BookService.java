@@ -14,9 +14,13 @@ public interface BookService {
 	
 	public Optional<Book> getBookById(Integer book_id);
 	
+	public List<Book> getBookByGenre(String genre);
+	
     public Book createBook(Book book);
 
     public Book updateBook(Integer bookId,Book updatedBook) throws BookNotFoundException;
 
     public void deleteBook(Integer bookId);
+
+	public Optional<Book> getBookByNameAndId(String bookName, Long id);
 	}

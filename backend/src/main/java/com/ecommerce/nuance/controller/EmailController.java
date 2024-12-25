@@ -1,12 +1,9 @@
 package com.ecommerce.nuance.controller;
 
-import com.ecommerce.nuance.model.Email;
+import com.ecommerce.nuance.model.User;
 import com.ecommerce.nuance.service.EmailService;
-import com.ecommerce.nuance.service.EmailServiceImpl;
-
-import org.apache.logging.log4j.message.StringFormattedMessage;
-import org.springframework.aot.hint.annotation.ReflectiveRuntimeHintsRegistrar;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,9 +18,17 @@ public class EmailController {
 	private EmailService emailService;
 
 	@PostMapping("/forgot-password")
-	public ResponseEntity<?> forgotPassword(@RequestBody Email details) {
-		return emailService.sendforgotPasswordMail(details);
-
+	public ResponseEntity<?> forgotPassword(@RequestBody User user) {
+		if (user == null || user.getEmail() == null || user.getEmail().isBlank()) {
+	        return ResponseEntity.badRequest().body("Email is required");
+	    }
+		if(emailService.userExists(user.getEmail()))
+		{
+			System.out.println("\n------------Log------------------");
+			System.out.println("The user exists with email: "+user.getEmail());
+			return emailService.sendforgotPasswordMail(user.getEmail());
+		}
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
 	}
 	
 	//This will be configured in the future with admin panel
