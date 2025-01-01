@@ -1,2 +1,0 @@
-The <> long with RequestMapping would tell that what data type would be returned.
-build() keyword is used to finalize the creation of ResponseEntity instance.

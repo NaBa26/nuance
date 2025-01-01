@@ -1,19 +1,17 @@
 package com.ecommerce.nuance.dto;
 
+import com.ecommerce.nuance.model.User;
+
 import jakarta.servlet.http.HttpSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class SessionManagement {
 
-    private static final Logger logger = LoggerFactory.getLogger(SessionManagement.class);
-
-    public static final String USERNAME = "username";
+    public static final String USER = "user";  // Use the key "user" for storing the entire user object
 
     public static void setAttribute(HttpSession session, String key, Object value) {
         if (session != null) {
             session.setAttribute(key, value);
-            logger.info("Set session attribute: {} = {}", key, value);
+            System.out.println("Set session attribute: " + key + " - " + value);
         }
     }
 
@@ -30,33 +28,43 @@ public class SessionManagement {
     public static void removeAttribute(HttpSession session, String key) {
         if (session != null) {
             session.removeAttribute(key);
-            logger.info("Removed session attribute: {}", key);
+            System.out.println("Removed session attribute: " + key);
         }
     }
 
-    public static void setUsername(HttpSession session, String username) {
-        setAttribute(session, USERNAME, username);
+    public static void setUser(HttpSession session, User user) {
+    	System.out.println("Setting User: " + USER + " user object: " +user);
+        setAttribute(session, USER, user);  // Store the entire user object in the session
     }
 
-    public static String getUsername(HttpSession session) {
-        return getAttribute(session, USERNAME, String.class);
+    public static User getUser(HttpSession session) {
+    	System.out.println("The USER for the current session is: " + getAttribute(session, USER, User.class));
+        return getAttribute(session, USER, User.class);  // Retrieve the entire user object
     }
 
     public static boolean isSessionValid(HttpSession session) {
-        return session != null && getAttribute(session, USERNAME, String.class) != null;
+        if(session != null && getUser(session) != null)
+        {
+        	return true;
+        }
+        return false;
     }
+
 
     public static void invalidateSession(HttpSession session) {
         if (session != null) {
-            logger.info("Invalidating session: {}", session.getId());
+            System.out.println("Invalidating session: " + session.getId());
             session.invalidate();
         }
     }
 
     public static void setSessionTimeout(HttpSession session, int timeoutInSeconds) {
-        if (session != null) {
+        if (session != null && isSessionValid(session)) {
             session.setMaxInactiveInterval(timeoutInSeconds);
-            logger.info("Session timeout set to {} seconds for session: {}", timeoutInSeconds, session.getId());
+            System.out.println("Session timeout set to " + timeoutInSeconds + " seconds for session: " + session.getId());
+        } else {
+        	System.out.println("Cannot set session timeout. Session is not valid.");
         }
     }
+
 }

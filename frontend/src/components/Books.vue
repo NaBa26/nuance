@@ -64,11 +64,9 @@ watch(
 
 </script>
 
-
-
 <template>
-  <div style="margin-top:5em;">
-    <h3 style="padding:1%">Search Results</h3>
+  <div style="margin-top:3em; margin-bottom: 3em;">
+    <h3 style="padding: 5px;">Search Results</h3>
     <div v-if="errorMessage">{{ errorMessage }}</div>
     <hr>
     <div v-if="books.length > 0" class="cards-container">

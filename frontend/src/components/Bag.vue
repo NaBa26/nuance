@@ -58,7 +58,6 @@
       },
       checkout() {
         alert('Proceeding to checkout...');
-        // Checkout logic
       }
     }
   };
@@ -66,9 +65,10 @@
   
   <style scoped>
   .bag-container {
-    max-width: 900px;
+    max-width: 100vw;
     margin: 0 auto;
     padding: 20px;
+    min-height: fit-content;
     background-color: #f8f9fa;
   }
   

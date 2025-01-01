@@ -3,18 +3,20 @@ package com.ecommerce.nuance.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.ecommerce.nuance.exception.CartNotFoundException;
 import com.ecommerce.nuance.model.Cart;
 
 public interface CartService {
 
-	List<Cart> getAllItems();
+    // Retrieve all cart items
+    List<Cart> getAllCarts();
 
-	Optional<Cart> getCartById(long long1);
+    // Retrieve a cart by its ID
+    Optional<Cart> getCartById(long cartId);
 
-	Cart createCart(Cart cart);
+    // Create a new cart
+    Cart createCart(Cart cart);
 
-	Cart updateCart(long cartId, Cart updatedCart);
-
-	void deleteCart(long long1);
-
+    // Update an existing cart
+    Cart updateCart(long cartId, Cart updatedCart) throws CartNotFoundException;
 }

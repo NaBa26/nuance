@@ -1,5 +1,4 @@
 package com.ecommerce.nuance.controller;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -37,11 +36,17 @@ public class BookController {
 
 	    @GetMapping("/{bookName}")
 	    public ResponseEntity<Book> getBookById(@PathVariable String bookName, @RequestParam("id") String bookId) {
-	        Optional<Book> bookOptional = bookService.getBookById(Integer.parseInt(bookId));
-	        if (bookOptional.isPresent()) {
-	            return ResponseEntity.ok(bookOptional.get());
-	        } else {
-	            return ResponseEntity.notFound().build();
+	        try {
+	            Optional<Book> bookOptional = bookService.getBookById(Integer.parseInt(bookId));
+
+	            if (bookOptional.isPresent()) {
+	                return ResponseEntity.ok(bookOptional.get());
+	            } else {
+	                return ResponseEntity.notFound().build();
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return ResponseEntity.badRequest().build();
 	        }
 	    }
 

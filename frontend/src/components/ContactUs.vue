@@ -1,5 +1,5 @@
 <template>
-    <section class="contact-us-section py-5">
+    <section class="contact-us-section py-5" style="margin-top: 5%;">
       <div class="container text-center">
         <h1 class="mb-4">Get in Touch</h1>
         <p class="mb-5">We’re here to assist you! Reach out through any of the following ways:</p>
@@ -8,7 +8,7 @@
           <!-- Customer Care -->
           <div class="col-md-4">
             <div class="contact-card p-4 shadow">
-              <img src="#" alt="Customer Care" class="contact-icon mb-3" />
+              <FontAwesomeIcon :icon="faPencil" size="2x" style="color: #F0A500; cursor: pointer;" />
               <h5>Customer Care</h5>
               <p>For inquiries about orders, returns, and more.</p>
               <a href="tel:+18001234567" class="btn btn-primary mt-2">Call Us</a>
@@ -18,7 +18,7 @@
           <!-- Support -->
           <div class="col-md-4">
             <div class="contact-card p-4 shadow">
-              <img src="#" alt="Support" class="contact-icon mb-3" />
+              <FontAwesomeIcon :icon="faGear" size="2x" style="color: #F0A500; cursor: pointer;" />
               <h5>Technical Support</h5>
               <p>Need help with our website or services?</p>
               <a href="mailto:support@nuance.com" class="btn btn-primary mt-2">Email Support</a>
@@ -28,7 +28,7 @@
           <!-- General Inquiries -->
           <div class="col-md-4">
             <div class="contact-card p-4 shadow">
-              <img src="#" alt="General Inquiries" class="contact-icon mb-3" />
+              <FontAwesomeIcon :icon="faQuestion" size="2x" style="color: #F0A500; cursor: pointer;" />
               <h5>General Inquiries</h5>
               <p>Have a question? We’d love to hear from you.</p>
               <a href="mailto:info@nuance.com" class="btn btn-primary mt-2">Email Us</a>
@@ -61,12 +61,12 @@
   <script setup>
   import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
   import { faFacebook, faInstagram, faXTwitter, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+  import { faGear, faPencil, faQuestion } from '@fortawesome/free-solid-svg-icons';
   </script>
   
   <style scoped>
   .contact-us-section {
-    background: linear-gradient(to right, #6B4F3B, #4C3A2A);
-    color: #fff;
+    color: #1B263B;
     font-family: 'Poppins', sans-serif;
   }
   
@@ -79,7 +79,7 @@
   }
   
   .contact-card {
-    background: #fff;
+    background: #f0f0f0;
     border-radius: 10px;
     text-align: center;
     color: #333;

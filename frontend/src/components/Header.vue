@@ -1,11 +1,60 @@
+<template>
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background: url('/assets/images/bg_images/pexels-pixabay-326333.jpg');">
+    <div class="container-fluid">
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <router-link to="/home">
+          <img src="/public/android-chrome-512x512.png" alt="logo" class="logo-img" />
+        </router-link>
+        <span class="ms-2 brand-name">nuance</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+        <ul class="navbar-nav mx-auto" style="font-size: 1rem;">
+          <li class="nav-item"><router-link class="nav-link" to="/home"><b>Home</b></router-link></li>
+          <li class="nav-item"><a class="nav-link" href="#"><b>Best Sellers</b></a></li>
+          <li class="nav-item"><a class="nav-link" href="#"><b>Staff Picks</b></a></li>
+          <li class="nav-item"><router-link class="nav-link" to="/books"><b>Books List</b></router-link></li>
+          <li class="nav-item"><router-link class="nav-link" to="/books"><b>Events</b></router-link></li>
+        </ul>
+
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item text-center me-2">
+            <router-link class="nav-link" :to="routeFunction('profile')">
+              <FontAwesomeIcon :icon="faUser" size="md" />
+              <div>Profile</div>
+            </router-link>
+          </li>
+          <li class="nav-item text-center me-2">
+            <router-link class="nav-link" :to="routeFunction('bag')">
+              <FontAwesomeIcon :icon="faShoppingBag" size="md" />
+              <div>Bag</div>
+            </router-link>
+          </li>
+          <li class="nav-item text-center me-2">
+            <router-link class="nav-link" to="/contact_us">
+              <FontAwesomeIcon :icon="faPhone" size="md" />
+              <div>Contact Us</div>
+            </router-link>
+          </li>
+          <li v-if="session" class="nav-item text-center me-2">
+            <button class="nav-link" @click="logOut">
+              <FontAwesomeIcon :icon="faSignOut" size="md" />
+              <div>Logout</div>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</template>
+
 <script setup>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faUser } from '@fortawesome/free-regular-svg-icons';
-import { faHeart } from '@fortawesome/free-regular-svg-icons';
-import { faShoppingBag } from '@fortawesome/free-solid-svg-icons';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { faPhone } from '@fortawesome/free-solid-svg-icons';
-import { onMounted, ref } from 'vue';
+import { faUser, faShoppingBag, faSignOut, faPhone } from '@fortawesome/free-solid-svg-icons';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
 const session = ref(false);
@@ -22,126 +71,37 @@ const checkSession = async () => {
 
 const logOut = async () => {
   try {
-    const response = await axios.post('http://localhost:8080/api/logout');
+    const response = await axios.post('http://localhost:8080/api/log-out');
     if (response.status === 200) {
       alert('Logging out...');
       window.location.href = 'http://localhost:5173/home';
     }
   } catch (error) {
-    if (error.response) {
-      errorMessage.value = error.response.data.message || 'Logout failed';
-    } else {
-      errorMessage.value = 'An error occurred: ' + error.message;
-    }
+    errorMessage.value = error.response ? error.response.data.message : 'An error occurred: ' + error.message;
   }
 };
 
+const routeFunction = (route) => session.value ? '/' + encodeURIComponent(route) : '/login';
+
 onMounted(() => {
   checkSession();
-  console.log(session.value);
 });
 </script>
 
-<template>
-  <nav class="navbar navbar-expand-lg navbar-dark" style="background: url('public/assets/images/bg_images/pexels-pixabay-326333.jpg');">
-    <div class="container-fluid">
-      <!-- Logo and Brand -->
-      <a class="navbar-brand d-flex align-items-center" href="#">
-        <router-link to="/home">
-          <img src="/public/android-chrome-512x512.png" alt="logo" class="logo-img" />
-        </router-link>
-        <span class="ms-2 brand-name">nuance</span>
-      </a>
-
-      <!-- Navbar Toggler for Mobile -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <!-- Navbar Links -->
-      <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-        <ul class="navbar-nav mx-auto" style="font-size: 1rem;">
-          <li class="nav-item">
-            <router-link class="nav-link" to="/home">Home</router-link>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">New Arrivals</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Best Sellers</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Staff Picks</a>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/books">Books list</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/books">Events</router-link>
-          </li>
-        </ul>
-
-        <!-- Profile, Wishlist, and Bag Icons -->
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item dropdown text-center me-2">
-            <a class="nav-link" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">
-              <FontAwesomeIcon :icon="faUser" size="md" />
-              <div>Profile</div>
-            </a>
-            <ul class="dropdown-content" aria-labelledby="profileDropdown">
-              <li><router-link class="dropdown-item" to="/login">LogIn</router-link></li>
-            </ul>
-          </li>
-          <li class="nav-item text-center me-2">
-            <a class="nav-link" href="#">
-              <FontAwesomeIcon :icon="faHeart" size="md" />
-              <div>Wishlist</div>
-            </a>
-          </li>
-          <li class="nav-item text-center me-2">
-            <router-link class="nav-link" to="/bag">
-              <FontAwesomeIcon :icon="faShoppingBag" size="md" />
-              <div>Bag</div>
-            </router-link>
-          </li>
-          <li class="nav-item text-center me-2">
-            <router-link class="nav-link" to="/contact_us">
-              <FontAwesomeIcon :icon="faPhone" size="md" />
-              <div>Contact Us</div>
-            </router-link>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-</template>
-
 <style scoped>
-.navbar-nav .nav-item .nav-link {
-  color: #fff;
-  transition: color 0.3s ease;
-}
-
-/* Header stays fixed at the top */
 .navbar {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 60px; /* Ensure a fixed height */
+  height: 100px;
   z-index: 1000;
   box-shadow: 0 4px 2px -2px gray;
-  background-color: rgba(0, 0, 0, 0.8); /* Add a background to avoid transparency issues */
-}
-
-/* Add padding to the section */
-section {
-  padding-top: 60px; /* Match the height of the header */
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 .navbar-nav .nav-link {
   margin-right: 15px;
-  position: relative;
   text-transform: uppercase;
   font-weight: 200;
   font-family: 'Merriweather', serif;
@@ -155,33 +115,24 @@ section {
   transform: scale(1.1);
 }
 
-.navbar-nav .nav-item .nav-link .fa {
+.navbar-nav .nav-link .fa {
   color: inherit;
   transition: color 0.3s ease;
 }
 
-.dropdown-content {
-  list-style: none;
-  padding-left: 0;
-}
-
-.dropdown-content li {
-  list-style: none;
-}
-
-.navbar-nav .nav-link:hover {
-  color: #F0A500;
-  transform: scale(1.1);
-}
-
-.navbar-nav .nav-link:hover::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
+.navbar {
+  position: fixed;
+  top: 0;
   left: 0;
   width: 100%;
-  height: 3px;
-  background-color: #F0A500;
+  z-index: 1000;
+  box-shadow: 0 4px 2px -2px gray;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.navbar-nav .nav-item .nav-link .fa {
+  color: inherit;
+  transition: color 0.3s ease;
 }
 
 .navbar-nav .dropdown-content {
@@ -213,18 +164,6 @@ section {
 
 .navbar-nav .dropdown:hover .dropdown-content {
   display: block;
-}
-
-.dropdown-item {
-  padding: 10px;
-}
-
-.dropdown-item:hover {
-  background-color: transparent;
-}
-
-.dropdown-divider {
-  margin: 5px 0;
 }
 
 .brand-name {

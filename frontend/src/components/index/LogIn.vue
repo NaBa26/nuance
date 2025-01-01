@@ -1,43 +1,47 @@
 <script setup>
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faXTwitter, faGoodreads, faGoogle } from '@fortawesome/free-brands-svg-icons';
+import { useStore } from 'vuex'; // Import useStore hook
 import { ref } from 'vue';
 import axios from 'axios';
 
-const formData=ref(
-  {
-    username:'',
-    password:''
-  }
-);
+const formData = ref({
+  username: '',
+  password: ''
+});
 
 const errorMessage = ref('');
 const successMessage = ref('');
 
+const store = useStore(); // Access Vuex store
+
 const handleLogin = async () => {
-  errorMessage.value='';
-  successMessage.value='';
+  errorMessage.value = '';
+  successMessage.value = '';
 
   try {
     const response = await axios.post('http://localhost:8080/api/process-login', formData.value);
     if (response.status === 200) {
-      window.location.href = 'http://localhost:5173/home';
+      alert("Logged in")
+      store.dispatch('login', response);
+      window.location.href = 'http://localhost:5173/home';  // Redirect after successful login
     }
-} catch (error) {
+  } catch (error) {
     if (error.response) {
-        if (error.response.status === 404) {
-            errorMessage.value = 'User not found.';
-        } else if (error.response.status === 401) {
-            errorMessage.value = 'Incorrect password.';
-        } else {
-            errorMessage.value = 'An error occurred: ' + (error.response.data || 'Unknown error.');
-        }
+      if (error.response.status === 404) {
+        errorMessage.value = 'User not found.';
+      } else if (error.response.status === 401) {
+        errorMessage.value = 'Incorrect password.';
+      } else if (error.response.status === 403) {
+        errorMessage.value = 'User is already logged in';
+      } else {
+        errorMessage.value = 'An error occurred: ' + (error.response.data || 'Unknown error.');
+      }
     } else {
-        errorMessage.value = 'An error occurred: ' + error.message;
+      errorMessage.value = 'An error occurred: ' + error.message;
     }
-}
-}
+  }
+};
 </script>
+
 
 <template>
 <section class="fullscreen" style="background-color: #1B263B;">

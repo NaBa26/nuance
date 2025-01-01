@@ -5,6 +5,9 @@ import com.ecommerce.nuance.exception.UserNotFoundException;
 
 import com.ecommerce.nuance.model.User;
 import com.ecommerce.nuance.repository.UserRepository;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,24 +20,14 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
+	@Autowired
 	private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
-
-    @Autowired
+    
     public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.encoder = encoder;
     }
-
-	@Override
-	public List<User> getAllUsers() {
-		return userRepository.findAll();
-	}
-
-//    @Override
-//    public Optional<User> getUserById(Long userId) {
-//        return userRepository.findById(userId);
-//    }
 
 	public User createUser(User user) { 
 		if (user != null) {
@@ -42,26 +35,6 @@ public class UserServiceImpl implements UserService {
 			return userRepository.save(user);
 		}
 		return null;
-	}
-
-//    public User updateUser(Long userId, User updatedUser) throws UserNotFoundException {
-//        return userRepository.findById(userId).map(user -> {
-//            user.setCity(updatedUser.getCity());
-//            user.setEmail(updatedUser.getEmail());
-//            user.setPassword(updatedUser.getPassword());
-//            user.setUsername(updatedUser.getUsername());
-//            return userRepository.save(user);
-//        }).orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
-//    }
-
-	public void deleteUser(long long1) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public Optional<User> getUserById(Long long1) {
-		// TODO Auto-generated method stub
-		return Optional.empty();
 	}
     
 	public LoginResult verifyCredentials(String username, String password) {
@@ -80,6 +53,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional
 	public void updatePassword(String recipient, String tempPassword) {
 		User existingUser = userRepository.findByEmail(recipient).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 		existingUser.setPassword(encoder.encode(tempPassword));
@@ -90,11 +64,5 @@ public class UserServiceImpl implements UserService {
 	public User updateUser(Long userId, User updatedUser) throws UserNotFoundException {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public void deleteUser(Long long1) {
-		// TODO Auto-generated method stub
-		
 	}
 }

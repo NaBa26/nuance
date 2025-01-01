@@ -24,6 +24,15 @@ const routes = [
     },
   },
   {
+    path: '/home/:userId',
+    components: {
+      home: Home,
+      header: Header,
+      footer: Footer,
+    },
+    props:{default:true},
+  },
+  {
     path: '/books',
     name: 'Books',
     components: {
@@ -33,6 +42,14 @@ const routes = [
     },
     props: { default: true },
   },
+  // {
+  //   path: '/books/:userId',
+  //   components: {
+  //     home: Home,
+  //     header: Header,
+  //     footer: Footer,
+  //   },
+  // },
   {
     path: '/books/:bookName',
     name: 'Book',
@@ -105,6 +122,15 @@ const routes = [
       contactUs: ContactUs,
     },
   },
+  {
+    path: '/contact_us/:userId',
+    components: {
+      home: Home,
+      header: Header,
+      footer: Footer,
+    },
+    props:{default:true},
+  }
 ];
 
 const router = createRouter({

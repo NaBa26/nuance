@@ -34,70 +34,75 @@ public class UserController {
     /* because axios.post sends data in JSON format, so we would
      * need to use @requestbody, not @modelattribute
      */
-    @PostMapping("/process-signup")
-    public ResponseEntity<?> createUser(@RequestBody User user) {
-        try {
-            User createdUser = this.userService.createUser(user);
-            return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-    
-    @PostMapping("/process-login")
-    public ResponseEntity<?> loginUser(@RequestBody User user, HttpSession session) {
-        // Check if the user is already logged in
-        if (SessionManagement.isSessionValid(session)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User is already logged in.");
-        }
+	    @PostMapping("/process-signup")
+	    public ResponseEntity<?> createUser(@RequestBody User user, HttpSession session) {
+	        try {
+	            // Create the user in the database
+	            User createdUser = this.userService.createUser(user);
 
-        // Verify credentials
-        LoginResult result = userService.verifyCredentials(user.getUsername(), user.getPassword());
+	            // Set the user details in the session
+	            SessionManagement.setUser(session, createdUser);  // Store the entire user object
 
-        switch (result.getMessage()) {
-            case "User not found":
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result.getMessage());
+	            return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+	        } catch (Exception e) {
+	            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+	        }
+	    }
 
-            case "Wrong password":
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result.getMessage());
+	    @PostMapping("/process-login")
+	    public ResponseEntity<?> loginUser(@RequestBody User user, HttpSession session) {
+	        // Verify credentials first
+	        LoginResult result = userService.verifyCredentials(user.getUsername(), user.getPassword());
 
-            case "Success":
-                Optional<User> authenticatedUser = result.getUser();
-                authenticatedUser.ifPresent(u -> u.setPassword(null)); // Exclude password for safety
-                SessionManagement.setUsername(session, authenticatedUser.get().getUsername());
-                return ResponseEntity.ok(authenticatedUser);
+	        switch (result.getMessage()) {
+	            case "User not found":
+	                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result.getMessage());
 
-            default:
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error");
-        }
-    }
+	            case "Wrong password":
+	                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result.getMessage());
 
-    
-    @GetMapping("/check-session")
-    public ResponseEntity<Map<String, Boolean>> checkSession(HttpSession session) {
-        boolean isActive = SessionManagement.isSessionValid(session);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("active", isActive);
-        return ResponseEntity.ok(response);
-    }
+	            case "Success":
+	                // Check if user is already logged in
+	                if (SessionManagement.isSessionValid(session)) {
+	                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User already logged in. Redirecting...");
+	                }
 
-    @PostMapping("/logout")
-    public ResponseEntity<Map<String, String>> logout(HttpSession session) {
-        if (!SessionManagement.isSessionValid(session)) {
-        	System.out.println("No active session found");
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "No active session found."));
-        }
+	                Optional<User> authenticatedUser = result.getUser();
+	                authenticatedUser.ifPresent(u -> {
+	                    u.setPassword(null); // Exclude password for safety
+	                    SessionManagement.setUser(session, u); // Store the user without sensitive info
+	                });
+	                return ResponseEntity.ok(authenticatedUser);
 
-        SessionManagement.invalidateSession(session);   
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Logged out successfully");
-        System.out.println("Logged out successfully");
-        return ResponseEntity.ok(response);
-    }
+	            default:
+	                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error");
+	        }
+	    }
 
 
 
-    
+	    @GetMapping("/check-session")
+	    public ResponseEntity<Map<String, Boolean>> checkSession(HttpSession session) {
+	        boolean isActive = SessionManagement.isSessionValid(session);
+	        Map<String, Boolean> response = new HashMap<>();
+	        response.put("active", isActive);
+	        System.out.println("Session Response: "+response.toString());
+	        return ResponseEntity.ok(response);
+	    }
+	    
+	    @PostMapping("/log-out")
+	    public ResponseEntity<Map<String, String>> logout(HttpSession session) {
+	        if (!SessionManagement.isSessionValid(session)) {
+	        	System.out.println("No active session found");
+	            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "No active session found."));
+	        }
+
+	        SessionManagement.invalidateSession(session);   
+	        Map<String, String> response = new HashMap<>();
+	        response.put("message", "Logged out successfully");
+	        return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "User logged out succesfully"));
+	    }
+
     @GetMapping("/check-auth")
     public Map<String, Object> checkAuth() {
         Map<String, Object> response = new HashMap<>();
@@ -126,24 +131,4 @@ public class UserController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND); // HTTP 404 for not found
         }
     }
-
-    // DELETE request to remove a user
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<?> deleteUser(@PathVariable String userId) {
-        try {
-            this.userService.deleteUser(Long.parseLong(userId));
-            return new ResponseEntity<>(HttpStatus.OK); // HTTP 200 for success
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); // HTTP 500 for errors
-        }
-    }
-
-
-    // Handle GET requests if needed
-//    @GetMapping("/{userId}")
-//    public ResponseEntity<?> getUserById(@PathVariable long userId) {
-//        Optional<User> user = this.userService.findUserById(userId);
-//        return user.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-//                   .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-//    }
 }

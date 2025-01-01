@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
-@EntityScan("com.ecommerce.nuance.model") //To map with the model package
+@EntityScan("com.ecommerce.nuance.model")
 @EnableJpaRepositories("com.ecommerce.nuance.repository")
 @EnableTransactionManagement
 public class NuanceApplication {
