@@ -6,6 +6,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.session.web.http.CookieSerializer;
+import org.springframework.session.web.http.DefaultCookieSerializer;
 
 @Configuration
 @EnableWebSecurity
@@ -16,8 +18,17 @@ public class SecurityConfig {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(16); // Consistent strength
     }
+    
+    // Cookie Serializer for SameSite and Secure cookie
+    @Bean
+    public CookieSerializer cookieSerializer() {
+        DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
+        cookieSerializer.setSameSite("None"); // Set SameSite to None
+        cookieSerializer.setUseSecureCookie(true);  // Ensure cookie is sent over HTTPS
+        return cookieSerializer;
+    }
 
-    // Security Filter Chain
+    // Security Filter Chain for Spring Security configuration
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // Configure HTTP security
@@ -28,12 +39,7 @@ public class SecurityConfig {
                     .anyRequest().authenticated())  // Require authentication for other routes
             .oauth2Login(oauth2Login -> oauth2Login
                 .loginPage("/api/process-login")  // Custom login page
-                .defaultSuccessUrl("/api/home", true)) // Redirect after successful login
-            .logout(logout -> logout
-                .logoutUrl("/api/logout")  // Define the logout URL
-                .logoutSuccessUrl("/api/home") // Redirect after successful logout
-                .invalidateHttpSession(true) // Invalidate the session after logout
-                .clearAuthentication(true)); // Clear authentication information
+                .defaultSuccessUrl("/api/home", true));
 
         return http.build();
     }

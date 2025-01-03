@@ -39,7 +39,7 @@
               <div>Contact Us</div>
             </router-link>
           </li>
-          <li v-if="session" class="nav-item text-center me-2">
+          <li v-if="isAuthenticated" class="nav-item text-center me-2">
             <button class="nav-link" @click="logOut">
               <FontAwesomeIcon :icon="faSignOut" size="md" />
               <div>Logout</div>
@@ -56,35 +56,34 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faUser, faShoppingBag, faSignOut, faPhone } from '@fortawesome/free-solid-svg-icons';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import { useStore } from 'vuex';
+import { computed } from 'vue';
 
-const session = ref(false);
 const errorMessage = ref('');
 
-const checkSession = async () => {
-  try {
-    const response = await axios.get('http://localhost:8080/api/check-session');
-    session.value = response.data.active;
-  } catch (error) {
-    errorMessage.value = 'Failed to check session: ' + error.message;
-  }
-};
+const store = useStore();
+const isAuthenticated = computed(() => store.getters.isAuthenticated);
 
 const logOut = async () => {
   try {
-    const response = await axios.post('http://localhost:8080/api/log-out');
+    const response = await axios.post('http://localhost:8080/api/log-out', null, { withCredentials: true });
     if (response.status === 200) {
       alert('Logging out...');
+      await store.dispatch('logout', response);
       window.location.href = 'http://localhost:5173/home';
     }
   } catch (error) {
+    if (error.response.status === 403) {
+        errorMessage.value = 'No active user';
+      }
     errorMessage.value = error.response ? error.response.data.message : 'An error occurred: ' + error.message;
   }
 };
 
-const routeFunction = (route) => session.value ? '/' + encodeURIComponent(route) : '/login';
+const routeFunction = (route) => isAuthenticated.valueOf ? '/' + encodeURIComponent(route) : '/login';
 
 onMounted(() => {
-  checkSession();
+  console.log(store.getters.isAuthenticated);
 });
 </script>
 

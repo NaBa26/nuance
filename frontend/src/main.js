@@ -20,6 +20,12 @@ import '/public/assets/js/slim.min.js';
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './routes';
+import store from './store';
+import axios from 'axios';
+
+axios.defaults.withCredentials = true;
 
 const app=createApp(App);
-app.use(router).mount('#app')
+app.use(store);
+app.use(router);
+app.mount('#app');

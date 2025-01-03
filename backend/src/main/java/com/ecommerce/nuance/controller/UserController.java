@@ -6,6 +6,9 @@ import com.ecommerce.nuance.exception.UserNotFoundException;
 import com.ecommerce.nuance.model.User;
 import com.ecommerce.nuance.service.UserService;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.sql.Date;
@@ -35,10 +38,12 @@ public class UserController {
      * need to use @requestbody, not @modelattribute
      */
 	    @PostMapping("/process-signup")
-	    public ResponseEntity<?> createUser(@RequestBody User user, HttpSession session) {
+	    public ResponseEntity<?> createUser(@RequestBody User user, HttpServletRequest request) {
 	        try {
 	            // Create the user in the database
 	            User createdUser = this.userService.createUser(user);
+	            
+	            HttpSession session=request.getSession();
 
 	            // Set the user details in the session
 	            SessionManagement.setUser(session, createdUser);  // Store the entire user object
@@ -50,7 +55,7 @@ public class UserController {
 	    }
 
 	    @PostMapping("/process-login")
-	    public ResponseEntity<?> loginUser(@RequestBody User user, HttpSession session) {
+	    public ResponseEntity<?> loginUser(@RequestBody User user, HttpServletRequest request) {
 	        // Verify credentials first
 	        LoginResult result = userService.verifyCredentials(user.getUsername(), user.getPassword());
 
@@ -63,6 +68,7 @@ public class UserController {
 
 	            case "Success":
 	                // Check if user is already logged in
+	            	HttpSession session=request.getSession();
 	                if (SessionManagement.isSessionValid(session)) {
 	                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User already logged in. Redirecting...");
 	                }
@@ -71,6 +77,8 @@ public class UserController {
 	                authenticatedUser.ifPresent(u -> {
 	                    u.setPassword(null); // Exclude password for safety
 	                    SessionManagement.setUser(session, u); // Store the user without sensitive info
+	                    System.out.println("Active user is: "+SessionManagement.getUser(session) + " ,for session - "+ session);
+	                    
 	                });
 	                return ResponseEntity.ok(authenticatedUser);
 
@@ -79,29 +87,47 @@ public class UserController {
 	        }
 	    }
 
-
-
-	    @GetMapping("/check-session")
-	    public ResponseEntity<Map<String, Boolean>> checkSession(HttpSession session) {
-	        boolean isActive = SessionManagement.isSessionValid(session);
-	        Map<String, Boolean> response = new HashMap<>();
-	        response.put("active", isActive);
-	        System.out.println("Session Response: "+response.toString());
-	        return ResponseEntity.ok(response);
-	    }
-	    
 	    @PostMapping("/log-out")
-	    public ResponseEntity<Map<String, String>> logout(HttpSession session) {
+	    public ResponseEntity<Map<String, String>> logout(HttpServletRequest request, HttpServletResponse response) {
+	        // Log the cookies sent with the request
+	        Cookie[] cookies = request.getCookies();
+	        if (cookies != null) {
+	            for (Cookie cookie : cookies) {
+	                System.out.println("Cookie: " + cookie.getName() + " = " + cookie.getValue());
+	            }
+	        } else {
+	            System.out.println("No cookies found in the request.");
+	        }
+	        
+	        HttpSession session=request.getSession(false);
+
+	        // Now check if the session is valid
 	        if (!SessionManagement.isSessionValid(session)) {
-	        	System.out.println("No active session found");
+	            System.out.println("No active session found. User is: " + SessionManagement.getUser(session) + " & session is - " + session);
 	            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "No active session found."));
 	        }
 
+	        // If session is valid, invalidate it
+	        System.out.println("Invalidating session for user: " + SessionManagement.getUser(session) + " ,for session - " + session);
 	        SessionManagement.invalidateSession(session);   
-	        Map<String, String> response = new HashMap<>();
-	        response.put("message", "Logged out successfully");
-	        return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "User logged out succesfully"));
+	        
+	        Cookie cookie = new Cookie("MY_SESSION_COOKIE", null);  // Use your session cookie name here
+	        cookie.setMaxAge(0);  // Expire immediately
+	        cookie.setPath("/");  // Set the path to match the cookie path
+	        cookie.setDomain("localhost");  // Set the domain (if applicable)
+	        cookie.setHttpOnly(true);
+	        cookie.setSecure(true);  // Set this to true if using HTTPS
+
+	        response.addCookie(cookie);  // Add the expired cookie to the response
+	        System.out.println("Cleared session cookie.");
+
+
+	        // Prepare and return the response
+	        Map<String, String> finalResponse = new HashMap<>();
+	        finalResponse.put("message", "Logged out successfully");
+	        return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "User logged out successfully"));
 	    }
+
 
     @GetMapping("/check-auth")
     public Map<String, Object> checkAuth() {

@@ -28,6 +28,7 @@ const handleSubmit = async () => {
   try {
     const response = await axios.post('http://localhost:8080/api/process-signup', formData.value);
     if (response.status === 201) {
+      store.dispatch('login', response);
       successMessage.value = 'User signed up successfully!';
       setTimeout(() => {
         router.push('/home');

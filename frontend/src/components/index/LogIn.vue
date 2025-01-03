@@ -1,7 +1,10 @@
 <script setup>
-import { useStore } from 'vuex'; // Import useStore hook
-import { ref } from 'vue';
+import { useStore } from 'vuex';
+import { onMounted, ref } from 'vue';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faGoogle, faTwitter, faGoodreads } from '@fortawesome/free-brands-svg-icons';
+import { computed } from 'vue';
 
 const formData = ref({
   username: '',
@@ -14,15 +17,17 @@ const successMessage = ref('');
 const store = useStore(); // Access Vuex store
 
 const handleLogin = async () => {
+  if(computed(() => store.getters.isAuthenticated).value) {
+    alert('User is already logged in');
+    return;
+  }
   errorMessage.value = '';
   successMessage.value = '';
-
   try {
     const response = await axios.post('http://localhost:8080/api/process-login', formData.value);
     if (response.status === 200) {
-      alert("Logged in")
-      store.dispatch('login', response);
-      window.location.href = 'http://localhost:5173/home';  // Redirect after successful login
+    store.dispatch('login', response);
+    window.location.href = 'http://localhost:5173/home';
     }
   } catch (error) {
     if (error.response) {
@@ -40,6 +45,10 @@ const handleLogin = async () => {
     }
   }
 };
+
+onMounted(() => {
+  console.log(store.getters.isAuthenticated);
+});
 </script>
 
 
@@ -72,7 +81,7 @@ const handleLogin = async () => {
                 <div class="auth-footer">
                     <h6>Or login with</h6>
                         <a href="http://localhost:8080/oauth2/authorization/google" class="text-decoration-none me-2"><FontAwesomeIcon :icon="faGoogle" size="xl" /></a>
-                        <a href="#" class="text-decoration-none me-2"><FontAwesomeIcon :icon="faXTwitter" size="xl" /></a>
+                        <a href="#" class="text-decoration-none me-2"><FontAwesomeIcon :icon="faTwitter" size="xl" /></a>
                         <a href="#" class="text-decoration-none me-2"><FontAwesomeIcon :icon="faGoodreads" size="xl" /></a>
                 </div>
             </div>
