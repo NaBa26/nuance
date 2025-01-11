@@ -77,7 +77,6 @@ public class UserController {
 	                authenticatedUser.ifPresent(u -> {
 	                    u.setPassword(null); // Exclude password for safety
 	                    SessionManagement.setUser(session, u); // Store the user without sensitive info
-	                    System.out.println("Active user is: "+SessionManagement.getUser(session) + " ,for session - "+ session);
 	                    
 	                });
 	                return ResponseEntity.ok(authenticatedUser);
@@ -108,7 +107,6 @@ public class UserController {
 	        }
 
 	        // If session is valid, invalidate it
-	        System.out.println("Invalidating session for user: " + SessionManagement.getUser(session) + " ,for session - " + session);
 	        SessionManagement.invalidateSession(session);   
 	        
 	        Cookie cookie = new Cookie("MY_SESSION_COOKIE", null);  // Use your session cookie name here

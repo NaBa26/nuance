@@ -12,6 +12,7 @@ import Profile from './components/Profile.vue';
 import ForgotPassword from './components/index/ForgotPassword.vue';
 import ContactUs from './components/ContactUs.vue';
 import OAuthRedirectHandler from './components/index/OAuthRedirectHandler.vue';
+import Checkout from './components/Checkout.vue';
 
 const routes = [
   { path: '/', redirect: '/home' },
@@ -24,15 +25,6 @@ const routes = [
     },
   },
   {
-    path: '/home/:userId',
-    components: {
-      home: Home,
-      header: Header,
-      footer: Footer,
-    },
-    props:{default:true},
-  },
-  {
     path: '/books',
     name: 'Books',
     components: {
@@ -42,14 +34,6 @@ const routes = [
     },
     props: { default: true },
   },
-  // {
-  //   path: '/books/:userId',
-  //   components: {
-  //     home: Home,
-  //     header: Header,
-  //     footer: Footer,
-  //   },
-  // },
   {
     path: '/books/:bookName',
     name: 'Book',
@@ -75,24 +59,6 @@ const routes = [
     },
   },
   {
-    path: '/bag',
-    name: 'Bag',
-    components: {
-      header: Header,
-      bag: Bag,
-      footer: Footer,
-    },
-  },
-  {
-    path: '/profile',
-    name: 'Profile',
-    components: {
-      header: Header,
-      profile: Profile,
-      footer: Footer,
-    },
-  },
-  {
     path: '/login/oauth2/code/google',
     name: 'OAuthRedirectHandler',
     components: {
@@ -114,6 +80,35 @@ const routes = [
     },
   },
   {
+    path: '/profile',
+    name: 'Profile',
+    components: {
+      header: Header,
+      profile: Profile,
+      footer: Footer,
+    },
+    props: route => ({ userId: route.params.id }),
+  },
+  {
+   path: '/bag',
+   name: Bag,
+    components: {
+      header: Header,
+      footer: Footer,
+      bag: Bag,
+    },
+    props: route => ({ userId: route.params.id }),
+  },
+  {
+    path: '/checkout',
+    name: Checkout,
+     components: {
+       header: Header,
+       footer: Footer,
+       checkout: Checkout,
+     }
+   },
+   {
     path: '/contact_us',
     name: 'ContactUs',
     components: {
@@ -122,15 +117,6 @@ const routes = [
       contactUs: ContactUs,
     },
   },
-  {
-    path: '/contact_us/:userId',
-    components: {
-      home: Home,
-      header: Header,
-      footer: Footer,
-    },
-    props:{default:true},
-  }
 ];
 
 const router = createRouter({

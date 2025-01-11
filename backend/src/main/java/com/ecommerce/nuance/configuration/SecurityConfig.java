@@ -35,7 +35,7 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authorizeRequests -> 
                 authorizeRequests
-                    .requestMatchers("/api/process-login", "/api/process-signup", "/api/books", "/api/home", "/api/email/forgot-password", "/api/check-session", "/api/check-auth", "api/books/*", "api/log-out").permitAll()
+                    .requestMatchers("/api/process-login", "/api/process-signup", "/api/books", "/api/home", "/api/email/forgot-password", "/api/check-auth", "api/books/*", "api/log-out").permitAll()
                     .anyRequest().authenticated())  // Require authentication for other routes
             .oauth2Login(oauth2Login -> oauth2Login
                 .loginPage("/api/process-login")  // Custom login page

@@ -220,7 +220,7 @@ html, body {
 
 .book-cards-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
   padding: 0 10px;
 }
@@ -240,7 +240,7 @@ html, body {
 
 .book-image {
   width: 100%;
-  height: 250px;
+  height: max-content;
   object-fit: cover;
   border-bottom: 2px solid #f0a500;
 }

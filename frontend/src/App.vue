@@ -14,6 +14,7 @@
       <router-view name="login" />
       <router-view name="signup" />
       <router-view name="forgotPassword" />
+      <router-view name="checkout" />
     </section>
   </main>
 
@@ -21,16 +22,3 @@
     <router-view name="footer" />
   </footer>
 </template>
-
-<script lang="ts">
-export default {
-  computed: {
-    isBooksOrBookRoute(): boolean {
-      return ['Books', 'Book', 'Bag', 'Profile', 'ContactUs'].includes(this.$route.name as string);
-    },
-    isAuthRoute(): boolean {
-      return ['LogIn', 'SignUp', 'ForgotPassword'].includes(this.$route.name as string);
-    }
-  }
-}
-</script>

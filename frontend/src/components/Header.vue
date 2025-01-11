@@ -22,13 +22,14 @@
 
         <ul class="navbar-nav ms-auto">
           <li class="nav-item text-center me-2">
-            <router-link class="nav-link" :to="routeFunction('profile')">
+            <router-link class="nav-link" :to="routeFunction({ path: 'profile'})">
               <FontAwesomeIcon :icon="faUser" size="md" />
               <div>Profile</div>
             </router-link>
           </li>
           <li class="nav-item text-center me-2">
-            <router-link class="nav-link" :to="routeFunction('bag')">
+            <!-- Dynamically generate the URL with userId -->
+            <router-link class="nav-link" :to="routeFunction({ path: 'bag'})">
               <FontAwesomeIcon :icon="faShoppingBag" size="md" />
               <div>Bag</div>
             </router-link>
@@ -39,11 +40,11 @@
               <div>Contact Us</div>
             </router-link>
           </li>
-          <li v-if="isAuthenticated" class="nav-item text-center me-2">
-            <button class="nav-link" @click="logOut">
+          <li v-if="isAuthenticated.valueOf" class="nav-item text-center me-2">
+            <a role="button" class="nav-link" @click.prevent="logOut">
               <FontAwesomeIcon :icon="faSignOut" size="md" />
               <div>Logout</div>
-            </button>
+            </a>
           </li>
         </ul>
       </div>
@@ -58,11 +59,20 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { useStore } from 'vuex';
 import { computed } from 'vue';
+import CryptoJS from 'crypto-js';
 
 const errorMessage = ref('');
 
 const store = useStore();
 const isAuthenticated = computed(() => store.getters.isAuthenticated);
+
+function encryptData(data) {
+  const encryptionKey = import.meta.env.VITE_USER_ID_ENCRYPTION_KEY;
+  if (!encryptionKey) {
+    throw new Error("Encryption key is not set in the environment variables.");
+  }
+  return CryptoJS.AES.encrypt(JSON.stringify(data), encryptionKey).toString();
+}
 
 const logOut = async () => {
   try {
@@ -70,7 +80,7 @@ const logOut = async () => {
     if (response.status === 200) {
       alert('Logging out...');
       await store.dispatch('logout', response);
-      window.location.href = 'http://localhost:5173/home';
+      window.location.href = 'http://localhost:5173/login';
     }
   } catch (error) {
     if (error.response.status === 403) {
@@ -80,11 +90,13 @@ const logOut = async () => {
   }
 };
 
-const routeFunction = (route) => isAuthenticated.valueOf ? '/' + encodeURIComponent(route) : '/login';
-
-onMounted(() => {
-  console.log(store.getters.isAuthenticated);
-});
+function routeFunction(route) {
+  if (isAuthenticated.value) {
+    return `/${route.path}?id=${encryptData(store.getters.userId)}`;
+  } else {
+    return '/login';
+  }
+}
 </script>
 
 <style scoped>
@@ -134,37 +146,6 @@ onMounted(() => {
   transition: color 0.3s ease;
 }
 
-.navbar-nav .dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #fff;
-  min-width: 200px;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-  border-radius: 10px;
-  padding: 0;
-}
-
-.navbar-nav .dropdown-content a {
-  color: #333;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  border-bottom: 1px solid #ddd;
-  border-radius: 8px;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.navbar-nav .dropdown-content a:hover {
-  background-color: #F0A500;
-  color: #fff;
-  transform: translateX(5px);
-}
-
-.navbar-nav .dropdown:hover .dropdown-content {
-  display: block;
-}
-
 .brand-name {
   font-size: 2rem;
   font-family: 'Merriweather', serif;
@@ -176,19 +157,9 @@ onMounted(() => {
   height: 50px;
 }
 
-@media (max-width: 992px) {
-  .searchBar-container {
-    display: none;
-  }
-}
-
 @media (max-width: 576px) {
   .navbar-nav .nav-link {
     font-size: 0.9rem;
-  }
-
-  .searchBar-container input {
-    width: 70%;
   }
 }
 </style>

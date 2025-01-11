@@ -1,13 +1,20 @@
 package com.ecommerce.nuance.model;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -19,10 +26,10 @@ public class User {
 	private long id;
 	
 	@Column(name="first_name")
-	private String first_name;
+	private String firstName;
 	
 	@Column(name="last_name")
-    private String last_name;
+    private String lastName;
 	
     private String email;
     private String username;
@@ -30,6 +37,14 @@ public class User {
     
     @Column(name="city")
     private String city; 
+    
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     public long getId() {
 		return id;
@@ -40,19 +55,19 @@ public class User {
 	}
 
 	public String getfirstName() {
-		return first_name;
+		return firstName;
 	}
 
-	public void setfirstName(String first_name) {
-		this.first_name = first_name;
+	public void setfirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
 	public String getlastName() {
-		return last_name;
+		return lastName;
 	}
 
-	public void setlastName(String last_name) {
-		this.last_name = last_name;
+	public void setlastName(String lastName) {
+		this.lastName = lastName;
 	}
 	
 	public String getUsername() {
@@ -79,15 +94,15 @@ public class User {
 	public void setCity(String city) {
 		this.city = city;
 	}
-	
-	public User(){}
 
-	public User(long id, String first_name, String last_name, String email, String username, String password,
+    public User() {}
+
+	public User(long id, String firstName, String lastName, String email, String username, String password,
 			String city) {
 		super();
 		this.id = id;
-		this.first_name = first_name;
-		this.last_name = last_name;
+		this.firstName = firstName;
+		this.lastName = lastName;
 		this.email = email;
 		this.username = username;
 		this.password = password;

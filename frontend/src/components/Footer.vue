@@ -14,16 +14,16 @@
         <!-- Social Media Links -->
         <div class="col-12 d-flex justify-content-center mb-4">
           <div class="social-media py-3">
-            <a href="#" class="text-decoration-none mx-2 social-icon">
+            <a href="javascript:void(0)" class="text-decoration-none mx-2 social-icon">
               <FontAwesomeIcon :icon="faInstagram" size="lg" />
             </a>
-            <a href="#" class="text-decoration-none mx-2 social-icon">
+            <a href="javascript:void(0)" class="text-decoration-none mx-2 social-icon">
               <FontAwesomeIcon :icon="faFacebook" size="lg" />
             </a>
-            <a href="#" class="text-decoration-none mx-2 social-icon">
+            <a href="javascript:void(0)" class="text-decoration-none mx-2 social-icon">
               <FontAwesomeIcon :icon="faLinkedin" size="lg" />
             </a>
-            <a href="#" class="text-decoration-none mx-2 social-icon">
+            <a href="javascript:void(0)" class="text-decoration-none mx-2 social-icon">
               <FontAwesomeIcon :icon="faXTwitter" size="lg" />
             </a>
           </div>

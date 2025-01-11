@@ -19,6 +19,8 @@
     "@mui/material": "^5.16.7",
     "axios": "^1.7.7",
     "bootstrap-icons": "^1.11.3",
+    "crypto-js": "^4.2.0",
+    "dotenv": "^16.4.7",
     "frontend": "file:",
     "toastification": "^0.1.5",
     "util": "^0.12.5",

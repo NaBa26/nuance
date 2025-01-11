@@ -1,8 +1,12 @@
 //The variable named here will be used in the Repository class query methods, so make sure that they align with one another.
 package com.ecommerce.nuance.model;
 
-import java.sql.Date;
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,17 +24,27 @@ public class Book {
 	The GenerationType.IDENTITY strategy is commonly used with databases that supports auto incrementing*/
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) 
-	private int id;
+	private long id;
 	private String name;
 	private String image;
 	private String author;
 	private String isbn;
-	private float price;
+	private BigDecimal price;
 	private int quantity;
 	private String genre;
-	private LocalDate date_published;
 	
-	public Book(int id, String name, String image, String author, String isbn, float price, int quantity, String genre, LocalDate date_published) {
+	@Column(name="date_published")
+	private LocalDate datePublished;
+	
+	@CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+	
+	public Book(long id, String name, String image, String author, String isbn, BigDecimal price, int quantity, String genre, LocalDate datePublished) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -40,7 +54,7 @@ public class Book {
 		this.price = price;
 		this.quantity = quantity;
 		this.genre = genre;
-		this.date_published = date_published;
+		this.datePublished = datePublished;
 	}
 	
 	/*
@@ -53,12 +67,11 @@ public class Book {
 	 * populated with data as needed.
 	 */
 	public Book() {}
-
-    
-	public int getId() {
+	
+	public long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public String getName() {
@@ -85,10 +98,10 @@ public class Book {
 	public void setIsbn(String isbn) {
 		this.isbn = isbn;
 	}
-	public float getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
-	public void setPrice(float price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 	public int getQuantity() {
@@ -104,10 +117,10 @@ public class Book {
 		this.genre = genre;
 	}
 	public LocalDate getPublishedDate() {
-		return date_published;
+		return datePublished;
 	}
-	public void setPublishedDate(LocalDate date_published) {
-		this.date_published = date_published;
+	public void setPublishedDate(LocalDate datePublished) {
+		this.datePublished = datePublished;
 	}
 	
 	

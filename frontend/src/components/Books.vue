@@ -1,8 +1,23 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue';
-import axios from 'axios';
-import { useRoute } from 'vue-router';
-import { computed } from 'vue';
+import { onMounted, ref, watch } from "vue";
+import axios from "axios";
+import { useRoute } from "vue-router";
+import { computed } from "vue";
+import { useStore } from "vuex";
+import CryptoJS from 'crypto-js';
+
+function encryptData(data) {
+  const secretKey = import.meta.env.VITE_BOOK_ID_ENCRYPTION_KEY;
+  return CryptoJS.AES.encrypt(JSON.stringify(data), secretKey).toString();
+}
+
+
+function decryptData(data) {
+  const encryptionKey = import.meta.env.VITE_BOOK_ID_ENCRYPTION_KEY;
+  const bytes = CryptoJS.AES.decrypt(data, encryptionKey);
+  const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
+  return JSON.parse(decryptedData);
+}
 
 const getOriginalPrice = (currentPrice) => {
   const randomPercentage = Math.random() * (10 - 5) + 5;
@@ -22,7 +37,6 @@ const booksWithPriceDetails = computed(() =>
   })
 );
 
-
 const books = ref([]);
 const route = useRoute();
 
@@ -30,15 +44,30 @@ const trimBookName = (name) => {
   return encodeURIComponent(name.trim());
 };
 
-const errorMessage = ref('');
+const addToCart = async (bookId) => {
+  try {
+    const response = await axios.post(
+      `http://localhost:8080/api/cart/add/${bookId}?id=${store.getters.userId}`
+    );
+    console.log(response.data);
+    alert("Book added to cart successfully.");
+  } catch (error) {
+    alert("Failed to add book to cart. Please try again later.");
+  }
+};
+
+const errorMessage = ref("");
+
+const store = useStore();
+const isAuthenticated = computed(() => store.getters.isAuthenticated);
 
 onMounted(async () => {
   try {
     const response = await axios.get(`http://localhost:8080/api/books`);
     books.value = response.data;
   } catch (error) {
-    errorMessage.value = 'Failed to fetch books. Please try again later.';
-    console.error('Error fetching books:', error);
+    errorMessage.value = "Failed to fetch books. Please try again later.";
+    console.error("Error fetching books:", error);
   }
 });
 
@@ -47,34 +76,45 @@ watch(
   async (newParams) => {
     if (newParams.bookName && newParams.bookId) {
       const bookName = trimBookName(decodeURIComponent(newParams.bookName));
-      const bookId = newParams.bookId;
-
+      const bookId = decryptData(newParams.bookId);
       try {
         const url = `http://localhost:8080/api/books/${bookName}?id=${bookId}`;
         const response = await axios.get(url);
         books.value = response.data;
       } catch (error) {
-        errorMessage.value = 'Failed to fetch book details.';
-        console.error('Error fetching book details:', error);
+        errorMessage.value = "Failed to fetch book details.";
+        console.error("Error fetching book details:", error);
       }
     }
   },
   { immediate: true }
 );
-
 </script>
 
 <template>
-  <div style="margin-top:3em; margin-bottom: 3em;">
-    <h3 style="padding: 5px;">Search Results</h3>
+  <div style="margin-top: 3em; margin-bottom: 3em">
+    <h3 style="padding: 5px">Search Results</h3>
     <div v-if="errorMessage">{{ errorMessage }}</div>
-    <hr>
+    <hr />
     <div v-if="books.length > 0" class="cards-container">
-      <div v-for="book in booksWithPriceDetails" :key="book.id" class="book-card">
+      <div
+        v-for="book in booksWithPriceDetails"
+        :key="book.id"
+        class="book-card"
+      >
         <!-- Router link wrapping the card -->
-        <router-link :to="`/books/${encodeURIComponent(book.name.toLowerCase())}?id=${book.id}`" class="card-link">
+        <router-link
+          :to="`/books/${encodeURIComponent(book.name.toLowerCase())}?id=${
+            encryptData(book.id)
+          }`"
+          class="card-link"
+        >
           <div class="book-image-container">
-            <img :src="`/assets/images/${book.image}`" :alt="book.name" class="book-image" />
+            <img
+              :src="`/assets/images/${book.image}`"
+              :alt="book.name"
+              class="book-image"
+            />
           </div>
           <div class="book-description">
             <div class="book-title">{{ book.name }}</div>
@@ -82,14 +122,12 @@ watch(
               <span>by </span><b>{{ book.author }}</b>
             </div>
             <div class="book-price">$ {{ book.price }}</div>
-              <div class="book-original-price">$ {{ book.originalPrice }}</div>
-              <div class="book-discount">({{ book.discount }}% off)</div>
+            <div class="book-original-price">$ {{ book.originalPrice }}</div>
+            <div class="book-discount">({{ book.discount }}% off)</div>
           </div>
         </router-link>
         <!-- Add to Cart button -->
-        <router-link :to="`/cart/add/${book.id}`" class="add-to-cart-btn">
-          Add to Cart
-        </router-link>
+         <button class="add-to-cart-btn" @click= "isAuthenticated ? addToCart(book.id) : routeFunction('login')">Add to Cart</button>
       </div>
     </div>
   </div>
@@ -101,7 +139,7 @@ watch(
   flex-wrap: wrap;
   gap: 10px;
   justify-content: space-evenly;
-  font-family: 'Merriweather', serif;
+  font-family: "Merriweather", serif;
 }
 
 .book-card {
@@ -139,7 +177,7 @@ watch(
 }
 
 .add-to-cart-btn {
-  background-color: #1B263B;
+  background-color: #1b263b;
   border: none;
   padding: 10px 20px;
   color: white;
@@ -153,7 +191,7 @@ watch(
 }
 
 .add-to-cart-btn:hover {
-  background-color: #F0A500;
+  background-color: #f0a500;
 }
 
 .book-image-container {
@@ -181,7 +219,7 @@ watch(
 }
 
 .book-title:hover {
-  color: #F0A500;
+  color: #f0a500;
 }
 
 .book-author,
@@ -193,7 +231,7 @@ watch(
 }
 
 .book-price {
-  color: #F0A500;
+  color: #f0a500;
   font-weight: bold;
 }
 

@@ -1,88 +1,109 @@
 package com.ecommerce.nuance.model;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "cart")
 public class Cart {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="cart_id")
-	private long cartId;
-	@Column(name="user_id")
-	private long userId;
-	@Column(name="order_id")
-	private int orderId;
-	@Column(name="book_id")
-	private int bookId;
-	@Column(name="quantity")
-	private int quantity;
-	@Column(name="subtotal")
-	private double subtotal;
-	
-	public Cart() {
-		super();
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	public long getCartId() {
-		return cartId;
-	}
+    private int quantity;
 
-	public void setCartId(long cartId) {
-		this.cartId = cartId;
-	}
+    private BigDecimal subtotal;
 
-	public long getUserId() {
-		return userId;
-	}
+    @ManyToOne(fetch = FetchType.LAZY) // Add the relationship
+    @JoinColumn(name = "book_id", referencedColumnName = "id") // Use the actual entity's ID as the foreign key
+    private Book book;
+    
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private User user;
 
-	public void setUserId(long userId) {
-		this.userId = userId;
-	}
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime deletedAt;
 
-	public int getOrderId() {
-		return orderId;
-	}
+    // Getters and setters
+    public Long getId() {
+        return id;
+    }
 
-	public void setOrderId(int orderId) {
-		this.orderId = orderId;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public int getBookId() {
-		return bookId;
-	}
+    public int getQuantity() {
+        return quantity;
+    }
 
-	public void setBookId(int bookId) {
-		this.bookId = bookId;
-	}
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
-	public int getQuantity() {
-		return quantity;
-	}
+    public BigDecimal getSubtotal() {
+        return subtotal;
+    }
 
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
+    public void setSubtotal(BigDecimal subtotal) {
+        this.subtotal = subtotal;
+    }
 
-	public double getSubtotal() {
-		return subtotal;
-	}
+    public Book getBook() {
+        return book;
+    }
 
-	public void setSubtotal(double subtotal) {
-		this.subtotal = subtotal;
-	}
+    public void setBook(Book book) {
+        this.book = book;
+    }
+    
+    public User getUser() {
+        return user;
+    }
 
-	@Override
-	public String toString() {
-		return "Cart [cartId=" + cartId + ", orderId=" + orderId + ", bookId=" 
-				+ bookId + ", quantity=" + quantity
-				+ ", subtotal=" + subtotal + "]";
-	}
-	
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public LocalDateTime getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
+    }
+    
+    public void updateSubtotal() {
+        if (book != null && quantity > 0) {
+            this.subtotal = book.getPrice().multiply(BigDecimal.valueOf(quantity));  // Get price from Book entity
+        } else {
+            this.subtotal = BigDecimal.ZERO;
+        }
+    }
 }

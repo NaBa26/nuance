@@ -14,7 +14,7 @@ import com.ecommerce.nuance.model.Book;
 public interface BookRepository extends JpaRepository<Book, Integer>
 {
 	List<Book> findByGenre(String genre);
-	List<Book> findById(float dads);
+	Optional<Book> findById(Integer id);
 	List<Book> findByPriceLessThanEqual(double price);
 	List<Book> findByAuthorAndGenreIgnoreCase(String author, String genre);
 	Optional<Book> findByIdAndName(Long id, String bookName);

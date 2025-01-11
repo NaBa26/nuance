@@ -20,7 +20,7 @@ public interface BookService {
 
     public Book updateBook(Integer bookId,Book updatedBook) throws BookNotFoundException;
 
-    public void deleteBook(Integer bookId);
+    public void deleteBook(Integer bookId) throws BookNotFoundException;
 
 	public Optional<Book> getBookByNameAndId(String bookName, Long id);
 	}
