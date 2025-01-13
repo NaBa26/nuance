@@ -21,5 +21,6 @@ Nuance Bookstore is currently under development. Stay tuned for exciting updates
 
 This is how the main product panel would look, could undergo further modifications depending how the rest of the pages will be designed.
 
-![image](https://github.com/user-attachments/assets/f6f779aa-73e8-4dc8-af99-9986ff35dd50)
+![image](https://github.com/user-attachments/assets/5d68cd37-6fb8-4432-bc60-e37f1be5eb5d)
+
 
