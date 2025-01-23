@@ -1,18 +1,36 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
+import CryptoJS from 'crypto-js';
+import { defineProps } from 'vue';
+
+const props = defineProps(['encryptedId', 'bookName']);
 
 const route = useRoute();
-const book = ref(null);
+const book = ref();
+const loader = ref(true);
 
-const fetchBookDetails = async (name, id) => {
+function decryptData(data) {
+  const encryptionKey = import.meta.env.VITE_BOOK_ID_ENCRYPTION_KEY;
+  try {
+    const bytes = CryptoJS.AES.decrypt(data, encryptionKey);
+    const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
+    return JSON.parse(decryptedData);
+  } catch (error) {
+    console.error("Decryption error:", error.message);
+    return null;
+  }
+}
+
+const fetchBookDetails = async (id, name) => {
   if (id && name) {
     try {
       const url = `http://localhost:8080/api/books/${encodeURIComponent(name.toLowerCase())}?id=${id}`;
-      console.log(url);
+      console.log("Fetching book details with URL:", url);
       const response = await axios.get(url);
       book.value = response.data;
+      loader.value = false;
     } catch (error) {
       console.error('Error fetching book details:', error);
     }
@@ -20,13 +38,31 @@ const fetchBookDetails = async (name, id) => {
 };
 
 onMounted(() => {
-  fetchBookDetails(route.params.bookName, route.query.id);
+  if (props.encryptedId && props.bookName) {
+    const decryptedId = decryptData(props.encryptedId);
+    if (decryptedId) {
+      fetchBookDetails(decryptedId, props.bookName);
+    } else {
+      console.error("Decryption failed or invalid ID");
+    }
+  } else {
+    console.error("Missing encrypted ID or book name");
+  }
 });
-</script>
 
+watch(() => props.encryptedId, (newEncryptedId) => {
+  if (newEncryptedId) {
+    const decryptedId = decryptData(newEncryptedId);
+    if (decryptedId) {
+      fetchBookDetails(decryptedId, props.bookName);
+    } else {
+      console.error("Decryption failed or invalid ID");
+    }
+  }
+}, { immediate: true });
+</script>
 <template>
-  <div v-if="!book" class="loading">
-    <p>Loading book details...</p>
+  <div v-if="loader" class="loading">
   </div>
   <div v-else class="main-content">
     <div class="left-column">
@@ -70,15 +106,54 @@ onMounted(() => {
   height: 100vh; /* Take full viewport height */
   text-align: center;
   padding: 20px;
-  font-size: 18px;
-  color: #1B263B;
-  background-color: #f4f4f4; /* Soft background color */
-  border-radius: 8px; /* Rounded corners */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
-  font-family: 'Arial', sans-serif; /* Clean font */
+  font-size: 20px; /* Slightly larger font size */
+  color: #FFFFFF; /* White text for better contrast */
+  background: linear-gradient(135deg, #4e6692, #1b263b);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* Deeper shadow for more depth */
+  font-family: 'Poppins', sans-serif; /* Modern font */
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
+/* Adding a loading spinner */
+.loading::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 70px;
+  height: 70px;
+  border: 10px solid #ffffff;
+  border-top: 10px solid #f0a500;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  transform: translate(-50%, -50%);
+}
 
+/* Spin animation for the spinner */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Optional: Adding a fade-in effect when loading starts */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.loading {
+  animation: fadeIn 1s ease-in-out; /* Fade-in animation */
+}
   .main-content {
     margin-top: 100px;
     display: flex;
@@ -232,6 +307,7 @@ onMounted(() => {
       opacity: 1;
     }
   }
+  
 </style>
 
   

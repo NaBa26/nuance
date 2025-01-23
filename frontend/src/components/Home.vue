@@ -5,17 +5,27 @@
       <div class="carousel-inner">
         <div class="carousel-item active">
           <div class="banner-image-wrapper">
-            <img src="/public/assets/images/bg_images/31286.jpg" class="d-block w-100 banner-image" alt="Image1">
+            <img src="/assets/images/bg_images/31286.jpg" class="d-block w-100 banner-image" alt="Image1">
           </div>
         </div>
         <div class="carousel-item">
           <div class="banner-image-wrapper">
-            <img src="/public/assets/images/bg_images/gift_packages.jpg" class="d-block w-100 banner-image" alt="Image2">
+            <img src="/assets/images/bg_images/gift_packages.jpg" class="d-block w-100 banner-image" alt="Image2">
           </div>
         </div>
         <div class="carousel-item">
           <div class="banner-image-wrapper">
-            <img src="/public/assets/images/bg_images/well_known.jpg" class="d-block w-100 banner-image" alt="Image3">
+            <img src="/assets/images/bg_images/first_time_buyers.jpg" class="d-block w-100 banner-image" alt="Image2">
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="banner-image-wrapper">
+            <img src="/assets/images/bg_images/best_seller.jpg" class="d-block w-100 banner-image" alt="Image2">
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="banner-image-wrapper">
+            <img src="/assets/images/bg_images/well_known.jpg" class="d-block w-100 banner-image" alt="Image3">
           </div>
         </div>
       </div>
@@ -35,7 +45,7 @@
       <div v-if="error" class="error-message">Oops! Something went wrong while fetching the books.</div>
       <div v-if="books.length > 0" class="book-cards-container">
         <div v-for="book in books" :key="book.id" class="book-card">
-          <router-link :to="`/books/${encodeURIComponent(book.name.toLowerCase())}?id=${book.id}`" class="card-link">
+          <router-link :to="`/books/${encodeURIComponent(book.name.toLowerCase())}?id=${encryptData(book.id)}`" class="card-link">
           <img :src="`/assets/images/${book.image}`" alt="Book Image" class="book-image" />
           <div class="book-details">
             <h3 class="book-title">{{ book.name }}</h3>
@@ -64,35 +74,37 @@
 
 <script>
 import axios from 'axios';
+import { onMounted, ref } from 'vue';
+import CryptoJS from 'crypto-js'; // Ensure CryptoJS is imported
 
 export default {
-  data() {
-    return {
-      books: [],
-      loading: false,
-      error: false,
-    };
-  },
-  mounted() {
-    this.fetchRandomBooks();
-  },
-  methods: {
-    async fetchRandomBooks() {
-      this.loading = true;
+  setup() {
+    // Declare reactive variables
+    const books = ref([]);
+    const loading = ref(false);
+    const error = ref(false);
+
+    // Fetch books data when component is mounted
+    onMounted(fetchRandomBooks);
+
+    // Function to fetch random books
+    async function fetchRandomBooks() {
+      loading.value = true;
       try {
         const response = await axios.get('http://localhost:8080/api/books');
-        const books = response.data;
-        const randomBooks = this.getRandomBooks(books, 4);
-        this.books = randomBooks;
-        this.loading = false;
-      } catch (error) {
-        console.error("There was an error fetching the books:", error);
-        this.error = true;
-        this.loading = false;
+        const booksData = response.data;
+        const randomBooks = getRandomBooks(booksData, 4);
+        books.value = randomBooks;
+        loading.value = false;
+      } catch (err) {
+        console.error("There was an error fetching the books:", err);
+        error.value = true;
+        loading.value = false;
       }
-    },
+    }
 
-    getRandomBooks(books, numBooks) {
+    // Function to get random books
+    function getRandomBooks(books, numBooks) {
       const randomBooks = [];
       const booksCopy = [...books];
       for (let i = 0; i < numBooks; i++) {
@@ -100,14 +112,28 @@ export default {
         randomBooks.push(booksCopy.splice(randomIndex, 1)[0]);
       }
       return randomBooks;
-    },
+    }
 
-    trimBookName(name) {
-    return encodeURIComponent(name.trim());
-}
+    // Function to encrypt data
+    function encryptData(data) {
+      const secretKey = import.meta.env.VITE_BOOK_ID_ENCRYPTION_KEY;
+      return CryptoJS.AES.encrypt(JSON.stringify(data), secretKey).toString();
+    }
+
+    // Return all the necessary methods and refs if you want them to be accessible in the template
+    return {
+      books,
+      loading,
+      error,
+      fetchRandomBooks,
+      getRandomBooks,
+      encryptData
+    };
   }
 };
 </script>
+
+
 
 <style scoped>
 html, body {
@@ -144,6 +170,26 @@ html, body {
   position: relative;
   height: 100%;
   width: 100%;
+  overflow: hidden;
+}
+
+.banner-image {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+  transition: transform 0.5s ease; 
+}
+
+.carousel-item {
+  position: relative;
+  height: 100%;
+}
+
+.banner-image-wrapper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
 }
 
 .banner-image {
@@ -151,6 +197,18 @@ html, body {
   height: 100%;
   width: 100%;
 }
+
+.carousel-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 150px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #f7f7f7 100%);
+  pointer-events: none;
+}
+
 
 .carousel-inner {
   height: 100%;

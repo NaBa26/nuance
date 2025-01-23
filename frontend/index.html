@@ -11,7 +11,7 @@
 
     <meta name="csrf-token" content="YOUR_CSRF_TOKEN_HERE">
 
-    <link rel="stylesheet" href="/public/assets/fonts/Merriweather.css">
+    <link rel="stylesheet" href="/assets/fonts/Merriweather.css">
 
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,3 +22,43 @@
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
+
+<style>
+  html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#app {
+  flex: 1;
+}
+
+/* Reset margin and padding for the body and html */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#app {
+  flex: 1;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100vw;
+  background-color: #f4f4f4;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+footer, #app {
+  margin: 0;
+}
+
+</style>

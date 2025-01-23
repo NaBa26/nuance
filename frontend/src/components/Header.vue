@@ -1,35 +1,72 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-dark" style="background: url('/assets/images/bg_images/pexels-pixabay-326333.jpg');">
+  <nav
+    class="navbar navbar-expand-lg navbar-dark"
+    style="
+      background: url('/assets/images/bg_images/pexels-pixabay-326333.jpg');
+    "
+  >
     <div class="container-fluid">
       <a class="navbar-brand d-flex align-items-center" href="#">
         <router-link to="/home">
-          <img src="/public/android-chrome-512x512.png" alt="logo" class="logo-img" />
+          <img
+            src="/android-chrome-512x512.png"
+            alt="logo"
+            class="logo-img"
+          />
         </router-link>
         <span class="ms-2 brand-name">nuance</span>
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-        <ul class="navbar-nav mx-auto" style="font-size: 1rem;">
-          <li class="nav-item"><router-link class="nav-link" to="/home"><b>Home</b></router-link></li>
-          <li class="nav-item"><a class="nav-link" href="#"><b>Best Sellers</b></a></li>
-          <li class="nav-item"><a class="nav-link" href="#"><b>Staff Picks</b></a></li>
-          <li class="nav-item"><router-link class="nav-link" to="/books"><b>Books List</b></router-link></li>
-          <li class="nav-item"><router-link class="nav-link" to="/books"><b>Events</b></router-link></li>
+      <div
+        class="collapse navbar-collapse justify-content-center"
+        id="navbarNav"
+      >
+        <ul class="navbar-nav mx-auto" style="font-size: 1rem">
+          <li class="nav-item">
+            <router-link class="nav-link" to="/home"><b>Home</b></router-link>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"><b>Best Sellers</b></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"><b>Staff Picks</b></a>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/books"
+              ><b>Books List</b></router-link
+            >
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/books"
+              ><b>Events</b></router-link
+            >
+          </li>
         </ul>
 
         <ul class="navbar-nav ms-auto">
           <li class="nav-item text-center me-2">
-            <router-link class="nav-link" :to="routeFunction({ path: 'profile'})">
+            <router-link
+              class="nav-link"
+              :to="routeFunction({ path: 'profile' })"
+            >
               <FontAwesomeIcon :icon="faUser" size="md" />
               <div>Profile</div>
             </router-link>
           </li>
           <li class="nav-item text-center me-2">
             <!-- Dynamically generate the URL with userId -->
-            <router-link class="nav-link" :to="routeFunction({ path: 'bag'})">
+            <router-link class="nav-link" :to="routeFunction({ path: 'bag' })">
               <FontAwesomeIcon :icon="faShoppingBag" size="md" />
               <div>Bag</div>
             </router-link>
@@ -40,11 +77,17 @@
               <div>Contact Us</div>
             </router-link>
           </li>
-          <li v-if="isAuthenticated.valueOf" class="nav-item text-center me-2">
+          <li v-if="isAuthenticated" class="nav-item text-center me-2">
             <a role="button" class="nav-link" @click.prevent="logOut">
               <FontAwesomeIcon :icon="faSignOut" size="md" />
               <div>Logout</div>
             </a>
+          </li>
+          <li v-else class="nav-item text-center me-2">
+            <router-link class="nav-link" to="/login">
+              <FontAwesomeIcon :icon="faSignIn" size="md" />
+              <div>LogIn</div>
+            </router-link>
           </li>
         </ul>
       </div>
@@ -53,15 +96,19 @@
 </template>
 
 <script setup>
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faUser, faShoppingBag, faSignOut, faPhone } from '@fortawesome/free-solid-svg-icons';
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
-import { useStore } from 'vuex';
-import { computed } from 'vue';
-import CryptoJS from 'crypto-js';
-
-const errorMessage = ref('');
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import {
+  faUser,
+  faShoppingBag,
+  faSignOut,
+  faPhone,
+  faSignIn,
+} from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
+import { useStore } from "vuex";
+import { computed } from "vue";
+import CryptoJS from "crypto-js";
+import Swal from "sweetalert2";
 
 const store = useStore();
 const isAuthenticated = computed(() => store.getters.isAuthenticated);
@@ -76,17 +123,28 @@ function encryptData(data) {
 
 const logOut = async () => {
   try {
-    const response = await axios.post('http://localhost:8080/api/log-out', null, { withCredentials: true });
+    const response = await axios.post(
+      "http://localhost:8080/api/log-out",
+      null,
+      { withCredentials: true }
+    );
     if (response.status === 200) {
-      alert('Logging out...');
-      await store.dispatch('logout', response);
-      window.location.href = 'http://localhost:5173/login';
+      await Swal.fire({
+        icon: "info",
+        title: "User will be logged out now!",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      await store.dispatch("logout", response);
+      window.location.href = "http://localhost:5173/login";
     }
   } catch (error) {
-    if (error.response.status === 403) {
-        errorMessage.value = 'No active user';
-      }
-    errorMessage.value = error.response ? error.response.data.message : 'An error occurred: ' + error.message;
+    Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Failed to log out!",
+        footer:"Please try again later"
+      });
   }
 };
 
@@ -94,7 +152,7 @@ function routeFunction(route) {
   if (isAuthenticated.value) {
     return `/${route.path}?id=${encryptData(store.getters.userId)}`;
   } else {
-    return '/login';
+    return "/login";
   }
 }
 </script>
@@ -115,14 +173,14 @@ function routeFunction(route) {
   margin-right: 15px;
   text-transform: uppercase;
   font-weight: 200;
-  font-family: 'Merriweather', serif;
+  font-family: "Merriweather", serif;
   letter-spacing: 1px;
   color: #fff;
   transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .navbar-nav .nav-link:hover {
-  color: #F0A500;
+  color: #f0a500;
   transform: scale(1.1);
 }
 
@@ -148,7 +206,7 @@ function routeFunction(route) {
 
 .brand-name {
   font-size: 2rem;
-  font-family: 'Merriweather', serif;
+  font-family: "Merriweather", serif;
   color: #fff;
 }
 

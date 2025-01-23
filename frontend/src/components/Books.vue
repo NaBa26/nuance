@@ -4,13 +4,13 @@ import axios from "axios";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
 import { useStore } from "vuex";
-import CryptoJS from 'crypto-js';
+import CryptoJS from "crypto-js";
+import Swal from "sweetalert2";
 
 function encryptData(data) {
   const secretKey = import.meta.env.VITE_BOOK_ID_ENCRYPTION_KEY;
   return CryptoJS.AES.encrypt(JSON.stringify(data), secretKey).toString();
 }
-
 
 function decryptData(data) {
   const encryptionKey = import.meta.env.VITE_BOOK_ID_ENCRYPTION_KEY;
@@ -50,9 +50,18 @@ const addToCart = async (bookId) => {
       `http://localhost:8080/api/cart/add/${bookId}?id=${store.getters.userId}`
     );
     console.log(response.data);
-    alert("Book added to cart successfully.");
+    Swal.fire({
+      icon: "success",
+      title: "Congratulations!",
+      text: "Book added to the cart succesfully",
+    });
   } catch (error) {
-    alert("Failed to add book to cart. Please try again later.");
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Failed to add book into the bag!",
+      footer:"Please try again later"
+    });
   }
 };
 
@@ -94,19 +103,17 @@ watch(
 <template>
   <div style="margin-top: 3em; margin-bottom: 3em">
     <h3 style="padding: 5px">Search Results</h3>
-    <div v-if="errorMessage">{{ errorMessage }}</div>
-    <hr />
+    <div v-if="errorMessage" class="alert alert-danger mt-4 text-center" role="alert">{{ errorMessage }}</div>
     <div v-if="books.length > 0" class="cards-container">
       <div
         v-for="book in booksWithPriceDetails"
         :key="book.id"
         class="book-card"
       >
-        <!-- Router link wrapping the card -->
         <router-link
-          :to="`/books/${encodeURIComponent(book.name.toLowerCase())}?id=${
-            encryptData(book.id)
-          }`"
+          :to="`/books/${encodeURIComponent(
+            book.name.toLowerCase()
+          )}?id=${encryptData(book.id)}`"
           class="card-link"
         >
           <div class="book-image-container">
@@ -127,7 +134,12 @@ watch(
           </div>
         </router-link>
         <!-- Add to Cart button -->
-         <button class="add-to-cart-btn" @click= "isAuthenticated ? addToCart(book.id) : routeFunction('login')">Add to Cart</button>
+        <button
+          class="add-to-cart-btn"
+          @click="isAuthenticated ? addToCart(book.id) : routeFunction('login')"
+        >
+          Add to Bag
+        </button>
       </div>
     </div>
   </div>

@@ -30,6 +30,7 @@ public class CartServiceImpl implements CartService {
         try {
             Optional<Cart> cartOptional = cartRepository.findByUserId(userId);
             return cartOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+            
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }

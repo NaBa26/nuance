@@ -1,71 +1,104 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useStore } from "vuex";
+import Swal from "sweetalert2";
 
-// Define reactive state for books and error message
 const books = ref([]);
 const errorMessage = ref(null);
 
-// Computed property for calculating the total price
 const totalPrice = computed(() => {
-  return books.value.reduce((total, book) => total + book.price * book.quantity, 0);
+  return books.value.reduce(
+    (total, book) => total + book.price * book.quantity,
+    0
+  );
 });
 
-// Increase quantity of a book
 const increaseQuantity = async (bookId) => {
   try {
-    const response = await axios.put(`http://localhost:8080/api/cart/increase/${bookId}?id=${store.getters.userId}`);
+    const response = await axios.put(
+      `http://localhost:8080/api/cart/increase/${bookId}?id=${store.getters.userId}`
+    );
     if (response.status === 200) {
-      const book = books.value.find(b => b.id === bookId);
+      const book = books.value.find((b) => b.id === bookId);
       if (book) book.quantity++;
-      alert("Quantity increased successfully.");
     }
   } catch (error) {
-    alert("Failed to perform operation. Please try again later.");
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Failed to perform operation!",
+      footer: "Please try again later",
+    });
   }
 };
 
-// Decrease quantity of a book
 const decreaseQuantity = async (bookId) => {
   try {
-    const response = await axios.put(`http://localhost:8080/api/cart/decrease/${bookId}?id=${store.getters.userId}`);
+    const response = await axios.put(
+      `http://localhost:8080/api/cart/decrease/${bookId}?id=${store.getters.userId}`
+    );
     if (response.status === 200) {
-      const book = books.value.find(b => b.id === bookId);
+      const book = books.value.find((b) => b.id === bookId);
       if (book) book.quantity--;
-      alert("Quantity decreased successfully.");
     }
   } catch (error) {
-    alert("Failed to perform operation. Please try again later.");
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Failed to perform operation!",
+      footer: "Please try again later",
+    });
   }
 };
 
-// Remove a book from the cart
 const removeItem = async (bookId) => {
   try {
-    const response = await axios.delete(`http://localhost:8080/api/cart/deleteBook/${bookId}?id=${store.getters.userId}`);
+    const response = await axios.delete(
+      `http://localhost:8080/api/cart/deleteBook/${bookId}?id=${store.getters.userId}`
+    );
     if (response.status === 200) {
-      books.value = books.value.filter(book => book.id !== bookId);
-      alert("Book removed from cart successfully.");
+      books.value = books.value.filter((book) => book.id !== bookId);
+      Swal.fire({
+        icon: "success",
+        title: "Book removed from the bag succesfully!",
+      });
     }
   } catch (error) {
-    alert("Failed to remove book from cart. Please try again later.");
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Failed to perform operation!",
+      footer: "Please try again later",
+    });
   }
 };
 
 const checkout = () => {
-  alert("Proceeding to checkout...");
+  setTimeout(() => {
+    Swal.fire({
+      icon: "info",
+      title: "Proceeding to checkout!",
+    });
+  }, 1000);
   window.location.href = "/checkout";
 };
 
 onMounted(async () => {
   try {
-    const response = await axios.get(`http://localhost:8080/api/cart/${store.getters.userId}`);
+    const response = await axios.get(
+      `http://localhost:8080/api/cart?id=${store.getters.userId}`, { withCredentials: true }
+    );
+    console.log(response);
     books.value = response.data;
   } catch (error) {
-    errorMessage.value = "Failed to fetch bag. Please try again later.";
+    if (error.response === 404) {
+      errorMessage.value = "Your bag is empty!";
+    } else {
+      errorMessage.value = "Failed to fetch bag. Please try again later.";
+    }
   }
 });
 
@@ -76,7 +109,6 @@ const store = useStore();
   <div class="bag-container">
     <h2 class="bag-title">Your Bag</h2>
 
-    <!-- Show cart items if there are any -->
     <div v-if="books.length > 0" class="bag-items">
       <div v-for="book in books" :key="book.id" class="bag-item">
         <img :src="book.image" alt="Product Image" class="item-image" />
@@ -92,7 +124,9 @@ const store = useStore();
               -
             </button>
             <span class="quantity-display">{{ book.quantity }}</span>
-            <button @click="increaseQuantity(book.id)" class="quantity-button">+</button>
+            <button @click="increaseQuantity(book.id)" class="quantity-button">
+              +
+            </button>
           </div>
         </div>
         <button class="remove-button" @click="removeItem(book.id)">
@@ -102,13 +136,21 @@ const store = useStore();
 
       <div class="bag-summary">
         <p class="summary-text">Total: $ {{ totalPrice }}</p>
-        <button class="checkout-button" @click="checkout">Proceed to Checkout</button>
+        <button class="checkout-button" @click="checkout">
+          Proceed to Checkout
+        </button>
       </div>
     </div>
 
     <div v-else class="empty-bag">
-      <p class="empty-text">{{ errorMessage || "Your bag is empty!" }}</p>
-      <router-link to="/books" class="back-to-shop">Continue Shopping</router-link>
+      <p class="empty-text">{{ errorMessage }}</p>
+    </div>
+    <br>
+    <div class="text-center mb-3 mt-3">
+    <router-link to="/books" class="back-to-shop">
+      <FontAwesomeIcon :icon="faArrowLeft" size="md" />
+      <span class="back-to-shop-text">Continue Shopping</span>
+    </router-link>
     </div>
   </div>
 </template>
@@ -228,14 +270,24 @@ const store = useStore();
 .empty-text {
   font-size: 1.2rem;
   margin-bottom: 20px;
+  color: #1b263b;
+  font-weight: 400;
 }
 
 .back-to-shop {
-  color: #f0a500;
+  padding: 20px;
+  color: #1b263b;
+  background-color: #f0a500;
+  border-radius: 15px;
   text-decoration: none;
   font-size: 1rem;
   font-weight: bold;
   border-bottom: 2px solid transparent;
-  transition: color 0.2s, border-bottom 0.2s;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.back-to-shop:hover {
+  background-color: #1b263b;
+  color: #f0a500;
 }
 </style>

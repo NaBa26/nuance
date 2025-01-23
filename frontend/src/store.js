@@ -17,18 +17,21 @@ export default createStore({
   actions: {
     async login({ commit }, response) {
       if (response.status === 200 && response.data.id) {
-        commit('setAuthenticated', true);
-        commit('setUserId', response.data.id);
+        commit("setAuthenticated", true);
+        commit("setUserId", response.data.id);
       }
     },
     logout({ commit }) {
-      commit('setAuthenticated', false);
-      commit('setUserId', null);
+      commit("setAuthenticated", false);
+      commit("setUserId", null);
+
+      window.sessionStorage.removeItem('vuex');
+      document.cookie = "MY_SESSION_COOKIE=; Max-Age=0; path=/; secure; HttpOnly;"
     },
   },
   getters: {
     isAuthenticated: (state) => state.isAuthenticated,
     userId: (state) => state.userId,
   },
-  plugins: [createPersistedState()],
+  plugins: [createPersistedState({ storage: window.sessionStorage })],
 });

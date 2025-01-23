@@ -79,11 +79,16 @@ const forgotPassword = async () => {
       "http://localhost:8080/api/email/forgot-password",
       formData.value
     );
-    alert("Password reset instructions have been sent to your email.");
+    Swal.fire({
+      icon: "success",
+      title: "New password has been sent succesfully to your registered email address.",
+    });
   } catch (error) {
-    alert(
-      "An error occurred while sending the reset instructions. Please try again."
-    );
+      Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Failed to send password reset link. Please try again later.",
+    });
   }
 };
 </script>

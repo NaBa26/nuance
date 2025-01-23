@@ -22,13 +22,15 @@
     "crypto-js": "^4.2.0",
     "dotenv": "^16.4.7",
     "frontend": "file:",
+    "sweetalert2": "^11.15.10",
     "toastification": "^0.1.5",
     "util": "^0.12.5",
-    "vee-validate": "^4.14.7",
+    "vee-validate": "^4.15.0",
     "vue": "^3.4.21",
     "vue-router": "^4.4.3",
     "vuex": "^4.1.0",
-    "vuex-persistedstate": "^4.1.0"
+    "vuex-persistedstate": "^4.1.0",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",

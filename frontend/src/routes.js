@@ -42,8 +42,11 @@ const routes = [
       header: Header,
       footer: Footer,
     },
-    props: { default: true },
-  },
+    props: route => ({
+      bookName: route.params.bookName,
+      encryptedId: route.query.id, 
+    }),
+  },  
   {
     path: '/login',
     name: 'LogIn',
@@ -87,28 +90,28 @@ const routes = [
       profile: Profile,
       footer: Footer,
     },
-    props: route => ({ userId: route.params.id }),
+    props: route => ({ userId: route.query.id })
   },
   {
-   path: '/bag',
-   name: Bag,
+    path: '/bag',
+    name: 'Bag',
     components: {
       header: Header,
       footer: Footer,
       bag: Bag,
     },
-    props: route => ({ userId: route.params.id }),
+    props: route => ({ id: route.query.id })
   },
   {
     path: '/checkout',
-    name: Checkout,
-     components: {
-       header: Header,
-       footer: Footer,
-       checkout: Checkout,
-     }
-   },
-   {
+    name: 'Checkout',
+    components: {
+      header: Header,
+      footer: Footer,
+      checkout: Checkout,
+    }
+  },
+  {
     path: '/contact_us',
     name: 'ContactUs',
     components: {

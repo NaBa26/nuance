@@ -1,24 +1,26 @@
 <script setup>
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faGoogle, faXTwitter, faGoodreads } from '@fortawesome/free-brands-svg-icons';
-import { ref } from 'vue';
-import axios from 'axios';
-import { useRouter } from 'vue-router';
-import { useStore } from 'vuex';
-import { computed } from 'vue';
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faGoogle } from "@fortawesome/free-brands-svg-icons";
+import { ref } from "vue";
+import axios from "axios";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import { computed } from "vue";
+import Swal from "sweetalert2";
 
 const formData = ref({
-  firstName: '',
-  lastName: '',
-  email: '',
-  username: '',
-  password: '',
-  confirmPassword: '',
-  city: '',
+  firstName: "",
+  lastName: "",
+  email: "",
+  username: "",
+  password: "",
+  confirmPassword: "",
+  city: "",
 });
 
-const errorMessage = ref('');
-const successMessage = ref('');
+const errorMessage = ref("");
+const successMessage = ref("");
+const isLoading = ref(false);
 const router = useRouter();
 const store = useStore();
 
@@ -26,130 +28,215 @@ const isAuthenticated = computed(() => store.getters.isAuthenticated);
 
 const handleSubmit = async () => {
   if (isAuthenticated.value) {
-    alert('Another user is already logged in');
+    Swal.fire({
+      icon: "error",
+      title: "Another user is already logged in.",
+    });
     return;
   }
-  errorMessage.value = '';
-  successMessage.value = '';
+  errorMessage.value = "";
+  successMessage.value = "";
+  isLoading.value = true;
 
   try {
-    const response = await axios.post('http://localhost:8080/api/process-signup', formData.value);
+    const response = await axios.post(
+      "http://localhost:8080/api/process-signup",
+      formData.value
+    );
     if (response.status === 201) {
-      store.dispatch('login', response);
-      successMessage.value = 'User signed up successfully!';
-      setTimeout(() => {
-        router.push('/home');
-      }, 1000);
+      store.dispatch("login", response);
+      Swal.fire({
+        icon: "success",
+        title: "User signed up successfully!",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      router.push("/home");
     }
   } catch (error) {
     if (error.response) {
       if (error.response.status === 400) {
-        errorMessage.value = 'Bad Request: ' + (error.response.data || 'Invalid data provided.');
+        errorMessage.value =
+          "Bad Request: " + (error.response.data || "Invalid data provided.");
       } else {
-        errorMessage.value = 'Error signing up: ' + (error.response.data || 'An unknown error occurred.');
+        errorMessage.value =
+          "Error signing up: " +
+          (error.response.data || "An unknown error occurred.");
       }
     } else {
-      errorMessage.value = 'Error signing up: ' + error.message;
+      errorMessage.value = "Error signing up: " + error.message;
     }
+  } finally {
+    isLoading.value = false;
   }
 };
 </script>
 
+<script></script>
+
 <template>
   <section class="fullscreen">
     <div class="container centered-content">
-      <div class="row justify-content-center align-items-center" style="width: 100%;">
+      <div
+        class="row justify-content-center align-items-center"
+        style="width: 100%"
+      >
         <div class="col-lg-6 col-md-8 col-sm-10">
           <div class="card bg-dark text-white shadow-lg">
             <div class="card-body p-5">
               <div class="text-center">
-                <img src="/apple-touch-icon.png" alt="logo" class="logo-img mb-4" />
-                <h2 class="fw-bold text-uppercase mb-4" style="color: #F0A500;">Sign up now!</h2>
-              </div>
-
-              <!-- Success/Error Messages -->
-              <div v-if="errorMessage" class="alert alert-danger mb-3" role="alert">
-                {{ errorMessage }}
-              </div>
-              <div v-if="successMessage" class="alert alert-success mb-3" role="alert">
-                {{ successMessage }}
+                <img
+                  src="/apple-touch-icon.png"
+                  alt="logo"
+                  class="logo-img mb-4"
+                />
+                <h2 class="fw-bold text-uppercase mb-4" style="color: #f0a500">
+                  Sign up now!
+                </h2>
               </div>
 
               <!-- Sign-Up Form -->
-              <form @submit.prevent="handleSubmit">
+              <form @submit.prevent="onSubmit">
                 <div class="row">
                   <div class="col-md-6 mb-2">
-                    <label class="form-label" for="firstName">First Name <span class="text-danger">*</span></label>
-                    <input v-model="formData.firstName" type="text" id="firstName" class="form-control form-control-lg" required />
+                    <label for="firstName" class="form-label"
+                      >First Name <span class="text-danger">*</span></label
+                    >
+                    <input
+                      type="text"
+                      id="firstName"
+                      v-model="firstName"
+                      class="form-control form-control-lg"
+                    />
+                    <span v-if="errors.firstName" class="text-danger">{{
+                      errors.firstName
+                    }}</span>
                   </div>
                   <div class="col-md-6 mb-3">
-                    <label class="form-label" for="lastName">Last Name <span class="text-danger">*</span></label>
-                    <input v-model="formData.lastName" type="text" id="lastName" class="form-control form-control-lg" required />
+                    <label for="lastName" class="form-label"
+                      >Last Name <span class="text-danger">*</span></label
+                    >
+                    <input
+                      type="text"
+                      id="lastName"
+                      v-model="lastName"
+                      class="form-control form-control-lg"
+                    />
+                    <span v-if="errors.lastName" class="text-danger">{{
+                      errors.lastName
+                    }}</span>
                   </div>
                 </div>
 
                 <div class="mb-3">
-                  <label class="form-label" for="email">Email <span class="text-danger">*</span></label>
-                  <input v-model="formData.email" type="email" id="email" class="form-control form-control-lg" required />
+                  <label for="email" class="form-label"
+                    >Email <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="email"
+                    id="email"
+                    v-model="email"
+                    class="form-control form-control-lg"
+                  />
+                  <span v-if="errors.email" class="text-danger">{{
+                    errors.email
+                  }}</span>
                 </div>
 
                 <div class="mb-3">
-                  <label class="form-label" for="username">Username <span class="text-danger">*</span></label>
-                  <input v-model="formData.username" type="text" id="username" class="form-control form-control-lg" required />
+                  <label for="username" class="form-label"
+                    >Username <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="text"
+                    id="username"
+                    v-model="username"
+                    class="form-control form-control-lg"
+                  />
+                  <span v-if="errors.username" class="text-danger">{{
+                    errors.username
+                  }}</span>
                 </div>
 
                 <div class="mb-3">
-                  <label class="form-label" for="password">Password <span class="text-danger">*</span></label>
-                  <input v-model="formData.password" type="password" id="password" class="form-control form-control-lg" required />
+                  <label for="password" class="form-label"
+                    >Password <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="password"
+                    id="password"
+                    v-model="password"
+                    class="form-control form-control-lg"
+                  />
+                  <span v-if="errors.password" class="text-danger">{{
+                    errors.password
+                  }}</span>
                 </div>
 
                 <div class="mb-3">
-                  <label class="form-label" for="confirmPassword">Confirm Password <span class="text-danger">*</span></label>
-                  <input v-model="formData.confirmPassword" type="password" id="confirmPassword" class="form-control form-control-lg" required />
+                  <label for="confirmPassword" class="form-label"
+                    >Confirm Password <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="password"
+                    id="confirmPassword"
+                    v-model="confirmPassword"
+                    class="form-control form-control-lg"
+                  />
+                  <span v-if="errors.confirmPassword" class="text-danger">{{
+                    errors.confirmPassword
+                  }}</span>
                 </div>
 
                 <div class="mb-3">
-                  <label class="form-label" for="city">City <span class="text-danger">*</span></label>
-                  <input v-model="formData.city" type="text" id="city" class="form-control form-control-lg" required />
+                  <label for="city" class="form-label"
+                    >City <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="text"
+                    id="city"
+                    v-model="city"
+                    class="form-control form-control-lg"
+                  />
+                  <span v-if="errors.city" class="text-danger">{{
+                    errors.city
+                  }}</span>
                 </div>
 
                 <button
                   type="submit"
                   class="btn btn-outline-light btn-lg w-100 mb-3"
+                  :disabled="isSubmitting"
                 >
-                  SignUp
+                  Sign Up
                 </button>
               </form>
+              <div v-if="isLoading" class="loader-overlay">
+                <div class="loader"></div>
+              </div>
 
               <!-- Social Sign-Up -->
               <div class="text-center mt-3">
-                <p class="text-white-50">Or sign up with</p>
-                <div class="d-flex justify-content-center gap-3">
-                  <a href="http://localhost:8080/oauth2/authorization/google" class="social-icon">
-                    <FontAwesomeIcon :icon="faGoogle" size="lg" />
-                  </a>
-                  <a href="#" class="social-icon">
-                    <FontAwesomeIcon :icon="faXTwitter" size="lg" />
-                  </a>
-                  <a href="#" class="social-icon">
-                    <FontAwesomeIcon :icon="faGoodreads" size="lg" />
-                  </a>
+                <div class="oauth-card">
+                  <p class="text-white-50">Or login with</p>
+                  <div class="d-flex justify-content-center gap-3">
+                    <a
+                      href="http://localhost:8080/oauth2/authorization/google"
+                      class="social-icon"
+                    >
+                      <FontAwesomeIcon :icon="faGoogle" size="lg" />
+                      <span>Google</span>
+                    </a>
+                  </div>
                 </div>
               </div>
 
-              <div v-if="errorMessage" class="alert alert-danger mt-4" role="alert">
-                {{ errorMessage }}
-              </div>
-
-              <div v-if="successMessage" class="alert alert-success mt-4" role="alert">
-                {{ successMessage }}
-              </div>
-
-              <!-- Footer Links -->
               <div class="mt-4 text-center">
                 <p class="text-white-50">
                   Already Registered?
-                  <router-link to="/login" class="text-white fw-bold">Log In</router-link>
+                  <router-link to="/login" class="text-white fw-bold"
+                    >Log In</router-link
+                  >
                 </p>
               </div>
             </div>
@@ -165,7 +252,7 @@ const handleSubmit = async () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #1B263B;
+  background-color: #1b263b;
   padding: 20px;
 }
 
@@ -197,29 +284,50 @@ const handleSubmit = async () => {
 }
 
 .form-control:focus {
-  border-color: #F0A500;
-  box-shadow: 0 0 5px #F0A500;
+  border-color: #f0a500;
+  box-shadow: 0 0 5px #f0a500;
 }
 
 .btn {
-  border: 1px solid #F0A500;
-  color: #F0A500;
+  border: 1px solid #f0a500;
+  color: #f0a500;
   transition: background-color 0.3s, color 0.3s;
 }
 
 .btn:hover {
-  background-color: #F0A500;
+  background-color: #f0a500;
   color: #212529;
 }
 
+.oauth-card {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  max-width: 200px;
+  margin: 0 auto;
+}
+
 .social-icon {
-  color: #F0A500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0a500;
+  color: #fff;
   font-size: 1.5rem;
-  transition: color 0.3s;
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
 }
 
 .social-icon:hover {
-  color: #fff;
+  background-color: #fff;
+  color: #f0a500;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.social-icon span {
+  margin-left: 0.5rem;
+  font-size: 1rem;
 }
 
 .logo-img {
@@ -239,6 +347,38 @@ const handleSubmit = async () => {
 
   .social-icon {
     font-size: 1.25rem;
+  }
+}
+
+/* Loader Styles */
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.loader {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #f0a500;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 </style>
