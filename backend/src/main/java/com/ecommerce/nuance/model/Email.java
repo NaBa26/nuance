@@ -1,7 +1,12 @@
 package com.ecommerce.nuance.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,12 +19,22 @@ public class Email {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) 
-	private int id;
+	private Integer id;
 	private String recipient;
 	private String subject;
 	private String body;
 	private String category;
 	private LocalDate sent;
+	
+	@CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+    
+    
 
 	public String getRecipient() {
 		return recipient;
@@ -63,7 +78,7 @@ public class Email {
 
 	public Email() {}
 
-	public Email(int id, String recipient, String subject, String body, String category, LocalDate sent) {
+	public Email(Integer id, String recipient, String subject, String body, String category, LocalDate sent) {
 		super();
 		this.id = id;
 		this.recipient = recipient;

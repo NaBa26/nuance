@@ -1,5 +1,5 @@
 <template>
-  <main class="container" style="padding-top: 10%;">
+  <main class="container">
 
     <div id="carouselExampleAutoplaying" class="carousel slide banner-carousel justify-content-center" data-bs-ride="carousel">
       <div class="carousel-inner">
@@ -45,7 +45,7 @@
       <div v-if="error" class="error-message">Oops! Something went wrong while fetching the books.</div>
       <div v-if="books.length > 0" class="book-cards-container">
         <div v-for="book in books" :key="book.id" class="book-card">
-          <router-link :to="`/books/${encodeURIComponent(book.name.toLowerCase())}?id=${encryptData(book.id)}`" class="card-link">
+          <router-link :to="`/books/${encodeURIComponent(book.name.toLowerCase())}?id=${book.id}`" class="card-link">
           <img :src="`/assets/images/${book.image}`" alt="Book Image" class="book-image" />
           <div class="book-details">
             <h3 class="book-title">{{ book.name }}</h3>
@@ -75,19 +75,15 @@
 <script>
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
-import CryptoJS from 'crypto-js'; // Ensure CryptoJS is imported
 
 export default {
   setup() {
-    // Declare reactive variables
     const books = ref([]);
     const loading = ref(false);
     const error = ref(false);
 
-    // Fetch books data when component is mounted
     onMounted(fetchRandomBooks);
 
-    // Function to fetch random books
     async function fetchRandomBooks() {
       loading.value = true;
       try {
@@ -103,7 +99,6 @@ export default {
       }
     }
 
-    // Function to get random books
     function getRandomBooks(books, numBooks) {
       const randomBooks = [];
       const booksCopy = [...books];
@@ -114,20 +109,12 @@ export default {
       return randomBooks;
     }
 
-    // Function to encrypt data
-    function encryptData(data) {
-      const secretKey = import.meta.env.VITE_BOOK_ID_ENCRYPTION_KEY;
-      return CryptoJS.AES.encrypt(JSON.stringify(data), secretKey).toString();
-    }
-
-    // Return all the necessary methods and refs if you want them to be accessible in the template
     return {
       books,
       loading,
       error,
       fetchRandomBooks,
       getRandomBooks,
-      encryptData
     };
   }
 };
@@ -146,6 +133,8 @@ html, body {
   display: flex;
   flex-direction: column;
   min-height: 100%;
+  padding-bottom: 70px;
+  padding-top: 70px;
 }
 
 .banner-carousel {

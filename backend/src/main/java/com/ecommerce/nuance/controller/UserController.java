@@ -32,6 +32,15 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
+    
+    @GetMapping("/current-user")
+    public ResponseEntity<?> getCurrentUser(@RequestParam("id") long userId) {
+        Object user = userService.getUser(userId);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user found");
+        }
+        return ResponseEntity.ok(user);
+    }
 
     @PostMapping("/process-signup")
     public ResponseEntity<?> createUser(@RequestBody User user, HttpServletRequest request, HttpServletResponse response) {
@@ -142,22 +151,5 @@ public class UserController {
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
-    }
-
-    @PutMapping("/edit-profile")
-    public ResponseEntity<?> updateUser(@RequestParam("id") long userId, @RequestBody User updatedUser, HttpServletRequest request, HttpServletResponse response) {
-        try {
-            User updated = userService.updateUser(userId, updatedUser);
-
-            // Re-authenticate user after profile update (optional)
-            HttpSession session = request.getSession();
-            SessionManagement.setUser(session, updated);
-            List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
-            authenticationService.authenticateUser(updated.getUsername(), authorities, request, response);
-
-            return ResponseEntity.ok(updated);
-        } catch (UserNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
     }
 }

@@ -11,29 +11,54 @@ import router from './routes';
 import axios from 'axios';
 import store from './store';
 import Swal from 'sweetalert2';
+import {clearCookies} from './util.js';
 
-const verifySession = async () => {
+const checkBackendAndSession = async () => {
   try {
-    const response = await axios.get('http://localhost:8080/api/verify-session');
-    console.log(response.data);
-  } catch (error) {
-    console.error('Session is invalid or expired:', error.response?.data || error.message);
-    this.$store.dispatch('logout');
+    await axios.head('http://localhost:8080');
+    console.log('Backend is operational.');
 
-    Swal.fire({
-      icon: 'info',
-      title: 'Session Expired',
-      timer: 3000,
-      text: 'Your session has expired. Please log in again.',
-      footer: 'You will be redirected to the login page shortly.'
-    });
-    this.$router.push('/login');
+    const response = await axios.get('http://localhost:8080/api/verify-session');
+    console.log('Session is valid:', response.data);
+  } catch (error) {
+    if (!error.response) {
+      console.error('Backend is down or unreachable:', error.message);
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Server Unreachable',
+        text: 'The backend server is currently offline. You have been logged out.',
+        timer: 5000,
+      });
+    } else if (error.response.status === 401) {
+      console.error('Session expired:', error.response.data);
+
+      Swal.fire({
+        icon: 'info',
+        title: 'Session Expired',
+        text: 'Your session has expired. Please log in again.',
+        timer: 3000,
+        footer: 'You will be redirected to the login page shortly.',
+      });
+    } else {
+      console.error('An unexpected error occurred:', error.response.data || error.message);
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Something went wrong. You have been logged out.',
+        timer: 5000,
+      });
+    }
+  }
+  finally {
+    store.dispatch("logout");
+    clearCookies();
+    window.location.href = '/login';
   }
 };
 
-setInterval(verifySession, 5 * 60 * 1000);
-
-
+setInterval(checkBackendAndSession, 5 * 60 * 1000);
 
 axios.defaults.withCredentials = true;
 

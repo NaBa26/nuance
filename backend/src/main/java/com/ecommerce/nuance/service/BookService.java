@@ -12,15 +12,15 @@ public interface BookService {
 	
 	public List<Book> getAllBooks();
 	
-	public Optional<Book> getBookById(Integer book_id);
+	public Optional<Book> getBookById(long bookId);
 	
 	public List<Book> getBookByGenre(String genre);
 	
     public Book createBook(Book book);
 
-    public Book updateBook(Integer bookId,Book updatedBook) throws BookNotFoundException;
+    public Book updateBook(long bookId,Book updatedBook) throws BookNotFoundException;
 
-    public void deleteBook(Integer bookId) throws BookNotFoundException;
+    public void deleteBook(long bookId) throws BookNotFoundException;
 
-	public Optional<Book> getBookByNameAndId(String bookName, Long id);
+	public Optional<Book> getBookByNameAndId(String bookName, long bookId);
 	}

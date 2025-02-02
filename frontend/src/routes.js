@@ -12,7 +12,7 @@ import Profile from './components/Profile.vue';
 import ForgotPassword from './components/index/ForgotPassword.vue';
 import ContactUs from './components/ContactUs.vue';
 import OAuthRedirectHandler from './components/index/OAuthRedirectHandler.vue';
-import Checkout from './components/Checkout.vue';
+import Events from './components/Events.vue';
 
 const routes = [
   { path: '/', redirect: '/home' },
@@ -33,6 +33,15 @@ const routes = [
       footer: Footer,
     },
     props: { default: true },
+  },
+  {
+    path: '/events',
+    name: 'Events',
+    components: {
+      books: Events,
+      header: Header,
+      footer: Footer,
+    },
   },
   {
     path: '/books/:bookName',
@@ -101,15 +110,6 @@ const routes = [
       bag: Bag,
     },
     props: route => ({ id: route.query.id })
-  },
-  {
-    path: '/checkout',
-    name: 'Checkout',
-    components: {
-      header: Header,
-      footer: Footer,
-      checkout: Checkout,
-    }
   },
   {
     path: '/contact_us',

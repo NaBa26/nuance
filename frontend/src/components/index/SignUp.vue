@@ -108,9 +108,6 @@ const handleSubmit = async () => {
                       v-model="firstName"
                       class="form-control form-control-lg"
                     />
-                    <span v-if="errors.firstName" class="text-danger">{{
-                      errors.firstName
-                    }}</span>
                   </div>
                   <div class="col-md-6 mb-3">
                     <label for="lastName" class="form-label"
@@ -122,9 +119,6 @@ const handleSubmit = async () => {
                       v-model="lastName"
                       class="form-control form-control-lg"
                     />
-                    <span v-if="errors.lastName" class="text-danger">{{
-                      errors.lastName
-                    }}</span>
                   </div>
                 </div>
 
@@ -138,9 +132,6 @@ const handleSubmit = async () => {
                     v-model="email"
                     class="form-control form-control-lg"
                   />
-                  <span v-if="errors.email" class="text-danger">{{
-                    errors.email
-                  }}</span>
                 </div>
 
                 <div class="mb-3">
@@ -153,9 +144,6 @@ const handleSubmit = async () => {
                     v-model="username"
                     class="form-control form-control-lg"
                   />
-                  <span v-if="errors.username" class="text-danger">{{
-                    errors.username
-                  }}</span>
                 </div>
 
                 <div class="mb-3">
@@ -168,9 +156,6 @@ const handleSubmit = async () => {
                     v-model="password"
                     class="form-control form-control-lg"
                   />
-                  <span v-if="errors.password" class="text-danger">{{
-                    errors.password
-                  }}</span>
                 </div>
 
                 <div class="mb-3">
@@ -183,9 +168,6 @@ const handleSubmit = async () => {
                     v-model="confirmPassword"
                     class="form-control form-control-lg"
                   />
-                  <span v-if="errors.confirmPassword" class="text-danger">{{
-                    errors.confirmPassword
-                  }}</span>
                 </div>
 
                 <div class="mb-3">
@@ -198,9 +180,6 @@ const handleSubmit = async () => {
                     v-model="city"
                     class="form-control form-control-lg"
                   />
-                  <span v-if="errors.city" class="text-danger">{{
-                    errors.city
-                  }}</span>
                 </div>
 
                 <button

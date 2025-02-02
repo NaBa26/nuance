@@ -1,5 +1,5 @@
 <template>
-    <section class="contact-us-section py-5" style="margin-top: 5%;">
+    <section class="contact-us-section py-5">
       <div class="container text-center">
         <h1 class="mb-4">Get in Touch</h1>
         <p class="mb-5">We’re here to assist you! Reach out through any of the following ways:</p>
@@ -66,6 +66,8 @@
   
   <style scoped>
   .contact-us-section {
+    margin-top: 100px;
+    margin-bottom: 100px;
     color: #1B263B;
     font-family: 'Poppins', sans-serif;
   }

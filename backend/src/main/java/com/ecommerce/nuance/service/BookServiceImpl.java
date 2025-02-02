@@ -23,7 +23,7 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findAll();
     }
 
-    public Optional<Book> getBookById(Integer bookId) {
+    public Optional<Book> getBookById(long bookId) {
         return bookRepository.findById(bookId);
     }
 
@@ -34,7 +34,7 @@ public class BookServiceImpl implements BookService {
         return bookRepository.save(bookModel);
     }
 
-    public Book updateBook(Integer bookId, Book updatedBook) throws BookNotFoundException {
+    public Book updateBook(long bookId, Book updatedBook) throws BookNotFoundException {
         return bookRepository.findById(bookId).map(book -> {
             book.setName(updatedBook.getName());
             book.setGenre(updatedBook.getGenre());
@@ -45,7 +45,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Transactional
-    public void deleteBook(Integer bookId) throws BookNotFoundException {
+    public void deleteBook(long bookId) throws BookNotFoundException {
         if (!bookRepository.existsById(bookId)) {
             throw new BookNotFoundException("Book not found with ID " + bookId);
         }
@@ -66,7 +66,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Optional<Book> getBookByNameAndId(String bookName, Long id) {
+    public Optional<Book> getBookByNameAndId(String bookName, long id) {
         return bookRepository.findByIdAndName(id, bookName);
     }
+
 }

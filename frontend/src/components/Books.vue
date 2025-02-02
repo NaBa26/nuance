@@ -1,23 +1,10 @@
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref} from "vue";
 import axios from "axios";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
 import { useStore } from "vuex";
-import CryptoJS from "crypto-js";
 import Swal from "sweetalert2";
-
-function encryptData(data) {
-  const secretKey = import.meta.env.VITE_BOOK_ID_ENCRYPTION_KEY;
-  return CryptoJS.AES.encrypt(JSON.stringify(data), secretKey).toString();
-}
-
-function decryptData(data) {
-  const encryptionKey = import.meta.env.VITE_BOOK_ID_ENCRYPTION_KEY;
-  const bytes = CryptoJS.AES.decrypt(data, encryptionKey);
-  const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
-  return JSON.parse(decryptedData);
-}
 
 const getOriginalPrice = (currentPrice) => {
   const randomPercentage = Math.random() * (10 - 5) + 5;
@@ -38,32 +25,67 @@ const booksWithPriceDetails = computed(() =>
 );
 
 const books = ref([]);
-const route = useRoute();
-
-const trimBookName = (name) => {
-  return encodeURIComponent(name.trim());
-};
 
 const addToCart = async (bookId) => {
   try {
-    const response = await axios.post(
-      `http://localhost:8080/api/cart/add/${bookId}?id=${store.getters.userId}`
-    );
-    console.log(response.data);
-    Swal.fire({
-      icon: "success",
-      title: "Congratulations!",
-      text: "Book added to the cart succesfully",
-    });
+    let response;
+    try {
+      response = await axios.get(
+        `http://localhost:8080/api/cart/${bookId}?id=${store.getters.userId}`
+      );
+    } catch (getError) {
+      if (getError.response && getError.response.status === 404) {
+        response = null;
+      } else {
+        throw getError;
+      }
+    }
+    if (response && response.data) {
+      const cartItem = response.data;
+
+      if (cartItem.deletedAt) {
+        const restoreResponse = await axios.put(
+          `http://localhost:8080/api/cart/restore/${bookId}?id=${store.getters.userId}`
+        );
+        if (restoreResponse.status === 200) {
+          Swal.fire({
+            icon: "success",
+            title: "Book added back to the cart!",
+          });
+        }
+      } else {
+        const updateResponse = await axios.put(
+          `http://localhost:8080/api/cart/increase/${bookId}?id=${store.getters.userId}`
+        );
+        if (updateResponse.status === 200) {
+          Swal.fire({
+            icon: "success",
+            title: "Quantity increased!",
+          });
+        }
+      }
+    } else {
+      const createResponse = await axios.post(
+        `http://localhost:8080/api/cart/add/${bookId}?id=${store.getters.userId}`
+      );
+      if (createResponse.status === 200) {
+        Swal.fire({
+          icon: "success",
+          title: "Book added to the cart!",
+        });
+      }
+    }
   } catch (error) {
+    console.error("Error adding to cart:", error);
     Swal.fire({
       icon: "error",
       title: "Oops...",
-      text: "Failed to add book into the bag!",
-      footer:"Please try again later"
+      text: "Failed to perform operation!",
+      footer: "Please try again later",
     });
   }
 };
+
 
 const errorMessage = ref("");
 
@@ -79,31 +101,18 @@ onMounted(async () => {
     console.error("Error fetching books:", error);
   }
 });
-
-watch(
-  () => route.params,
-  async (newParams) => {
-    if (newParams.bookName && newParams.bookId) {
-      const bookName = trimBookName(decodeURIComponent(newParams.bookName));
-      const bookId = decryptData(newParams.bookId);
-      try {
-        const url = `http://localhost:8080/api/books/${bookName}?id=${bookId}`;
-        const response = await axios.get(url);
-        books.value = response.data;
-      } catch (error) {
-        errorMessage.value = "Failed to fetch book details.";
-        console.error("Error fetching book details:", error);
-      }
-    }
-  },
-  { immediate: true }
-);
 </script>
 
 <template>
-  <div style="margin-top: 3em; margin-bottom: 3em">
+  <div class="container" style="margin-top: 3em; margin-bottom: 3em">
     <h3 style="padding: 5px">Search Results</h3>
-    <div v-if="errorMessage" class="alert alert-danger mt-4 text-center" role="alert">{{ errorMessage }}</div>
+    <div
+      v-if="errorMessage"
+      class="alert alert-danger mt-4 text-center"
+      role="alert"
+    >
+      {{ errorMessage }}
+    </div>
     <div v-if="books.length > 0" class="cards-container">
       <div
         v-for="book in booksWithPriceDetails"
@@ -113,7 +122,7 @@ watch(
         <router-link
           :to="`/books/${encodeURIComponent(
             book.name.toLowerCase()
-          )}?id=${encryptData(book.id)}`"
+          )}?id=${book.id}`"
           class="card-link"
         >
           <div class="book-image-container">
@@ -146,6 +155,10 @@ watch(
 </template>
 
 <style scoped>
+.container{
+  padding-top: 80px;
+  padding-bottom: 100px;
+}
 .cards-container {
   display: flex;
   flex-wrap: wrap;

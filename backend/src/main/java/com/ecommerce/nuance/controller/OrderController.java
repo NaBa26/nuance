@@ -1,67 +1,44 @@
 package com.ecommerce.nuance.controller;
 
-import java.util.List;
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.net.http.HttpRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ecommerce.nuance.exception.OrderNotFoundException;
 import com.ecommerce.nuance.model.Order;
+import com.ecommerce.nuance.model.User;
+import com.ecommerce.nuance.repository.UserRepository;
 import com.ecommerce.nuance.service.OrderService;
 
 @RestController
-@RequestMapping("/orders")
+@RequestMapping("/api/orders")
 public class OrderController {
 
 	@Autowired
 	 private final OrderService orderService;
+	private final UserRepository userRepository;
 
-	    public OrderController(OrderService orderService) {
+	    public OrderController(OrderService orderService, UserRepository userRepository) {
 	        this.orderService = orderService;
+	        this.userRepository = userRepository;
 	    }
 	    
-	    @GetMapping
-	    public List<Order> getAllOrders() {
-			return orderService.getAllOrders();
-		}
+	    @PostMapping("/create-order")
+	    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
+	    	System.out.println(order.toString());
+	        userRepository.findById(order.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
 
-	    @GetMapping("/{orderId}")
-	    public Optional<Order> getOrderById(@PathVariable String orderId) {
-	        return this.orderService.getOrderById(Long.parseLong(orderId));
-	    }
-	
-		@PostMapping(consumes = "application/json")
-	    public Order createOrder(@RequestBody Order order) 
-		{
-			return this.orderService.createOrder(order);
+	        Order savedOrder = orderService.createOrder(order);
+	        return ResponseEntity.status(HttpStatus.CREATED).body(savedOrder);
 	    }
 
-       @PutMapping("/{orderId}")
-       public Order updateOrder(@PathVariable long orderId, @RequestBody Order updatedOrder) throws OrderNotFoundException 
-       {
-       	return this.orderService.updateOrder(orderId, updatedOrder);
-       }
 
-       @DeleteMapping("/{orderId}")
-       public ResponseEntity<HttpStatus> deleteOrder(@PathVariable String orderId) 
-       {
-       	try {
-       		this.orderService.deleteOrder(Long.parseLong(orderId));
-       		return new ResponseEntity<>(HttpStatus.OK);
-       	} catch (Exception e)
-       	{
-       		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-       	}
-       }
+
 	
 }

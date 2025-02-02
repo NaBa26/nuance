@@ -1,134 +1,135 @@
+<script setup>
+import { ref, onMounted } from "vue";
+import axios from "axios";
+import { useStore } from "vuex";
+import Swal from "sweetalert2";
+
+const user = ref({});
+const store = useStore();
+
+const editProfile = () => {
+  Swal.fire({
+    icon: "info",
+    title: "Edit Profile",
+    text: "This feature is not yet implemented.",
+  });
+};
+
+onMounted(async () => {
+  try {
+    const response = await axios.get(
+      `http://localhost:8080/api/current-user?id=${store.getters.userId}`,
+      { withCredentials: true }
+    );
+    user.value = response.data;
+    console.log(user.value);
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Failed to fetch user data!",
+      footer: "Please try again later",
+    });
+    window.location.href = "/home";
+  }
+});
+</script>
+
 <template>
   <div class="profile-container">
     <div class="profile-overlay">
       <div class="profile-card">
-        <h2 class="profile-name">{{ user.name }}</h2>
+        <img
+          src="/assets/images/bg_images/user.jpg"
+          alt="Profile Picture"
+          class="profile-picture"
+        />
+        <h2 class="profile-name">{{ user.username }}</h2>
         <p class="profile-email">{{ user.email }}</p>
+        <p class="profile-info">First Name: {{ user.firstName }}</p>
+        <p class="profile-info">Last Name: {{ user.lastName }}</p>
+        <p class="profile-info">City: {{ user.city }}</p>
         <button class="edit-button" @click="editProfile">Edit Profile</button>
-      </div>
-
-      <div class="profile-details">
-        <h3 class="section-title">Order History</h3>
-        <div v-if="orders.length > 0" class="order-list">
-          <div v-for="order in orders" :key="order.id" class="order-item">
-            <p><strong>Order #:</strong> {{ order.id }}</p>
-            <p><strong>Date:</strong> {{ order.date }}</p>
-            <p><strong>Total:</strong> ${{ order.total }}</p>
-            <button class="details-button">View Details</button>
-          </div>
-        </div>
-        <div v-else class="no-orders">
-          <p>You haven't placed any orders yet.</p>
-        </div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      user: {
-        name: "John Doe",
-        email: "john.doe@example.com"
-      },
-      orders: [
-        { id: '12345', date: '2024-09-10', total: '150.00' },
-        { id: '67890', date: '2024-10-05', total: '230.00' }
-      ]
-    };
-  },
-  methods: {
-    editProfile() {
-      // Profile edit logic
-    }
-  }
-};
-</script>
-
 <style scoped>
 .profile-container {
-  background-size: cover;
-  background-position: center;
+  background: linear-gradient(135deg, #1b263b, #3a506b);
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 20px;
 }
 
 .profile-overlay {
-  background-color: rgba(27, 38, 59, 0.8);
-  padding: 30px;
-  border-radius: 12px;
+  background-color: rgba(27, 38, 59, 0.95);
+  padding: 50px;
+  border-radius: 20px;
   color: white;
   width: 100%;
   max-width: 600px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  text-align: center;
 }
 
 .profile-card {
   background-color: rgba(255, 255, 255, 0.1);
-  padding: 20px;
-  border-radius: 8px;
+  padding: 40px;
+  border-radius: 15px;
   text-align: center;
+}
+
+.profile-picture {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
   margin-bottom: 20px;
+  object-fit: cover;
+  border: 3px solid #f0a500;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .profile-name {
   font-size: 1.8rem;
-  color: #F0A500;
+  color: #f0a500;
+  margin-bottom: 15px;
 }
 
 .profile-email {
   font-size: 1.2rem;
+  color: #e0e0e0;
   margin-bottom: 20px;
 }
 
-.edit-button {
-  background-color: #F0A500;
-  color: #1B263B;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-}
-
-.profile-details {
-  margin-top: 30px;
-}
-
-.section-title {
-  font-size: 1.5rem;
+.profile-info {
+  font-size: 1.1rem;
+  color: #ffffff;
   margin-bottom: 15px;
 }
 
-.order-list {
-  background-color: rgba(255, 255, 255, 0.1);
-  padding: 15px;
-  border-radius: 8px;
-  color: white;
-}
-
-.order-item {
-  margin-bottom: 10px;
-  padding: 10px;
-  border-bottom: 1px solid #F0A500;
-}
-
-.details-button {
-  background-color: #F0A500;
-  color: #1B263B;
+.edit-button {
+  background-color: #f0a500;
+  color: #1b263b;
   border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
+  padding: 12px 30px;
+  border-radius: 8px;
   cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.no-orders {
-  background-color: rgba(240, 165, 0, 0.8);
-  padding: 20px;
-  border-radius: 8px;
-  text-align: center;
+.edit-button:hover {
+  background-color: #d18f00;
+  transform: translateY(-2px);
+}
+
+.edit-button:active {
+  transform: translateY(1px);
 }
 </style>
+

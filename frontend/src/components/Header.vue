@@ -48,7 +48,7 @@
             >
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/books"
+            <router-link class="nav-link" to="/events"
               ><b>Events</b></router-link
             >
           </li>

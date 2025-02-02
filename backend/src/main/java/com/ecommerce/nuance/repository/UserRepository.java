@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.ecommerce.nuance.model.User;
 
 @Repository
-public  interface UserRepository extends JpaRepository<User,Integer>{
+public  interface UserRepository extends JpaRepository<User,Long>{
 
 	List<User> findByCity(String city);
 

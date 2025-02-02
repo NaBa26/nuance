@@ -180,11 +180,11 @@ const handleLogin = async () => {
 <style scoped>
 /* Fullscreen container */
 .fullscreen {
-  display: flex;
   justify-content: center;
   align-items: center;
   background-color: #1b263b;
   padding: 20px;
+  display:flexbox;
 }
 
 .loader-overlay {

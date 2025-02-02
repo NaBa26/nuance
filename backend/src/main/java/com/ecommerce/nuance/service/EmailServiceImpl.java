@@ -1,23 +1,15 @@
 package com.ecommerce.nuance.service;
 
-import com.ecommerce.nuance.model.Email;
 import com.ecommerce.nuance.model.User;
-import com.ecommerce.nuance.repository.BookRepository;
 import com.ecommerce.nuance.repository.UserRepository;
 
 import jakarta.mail.internet.MimeMessage;
 
 import java.security.SecureRandom;
 import java.util.Optional;
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.ResponseEntity.BodyBuilder;
-import org.springframework.http.ResponseEntity.HeadersBuilder;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,10 @@
 package com.ecommerce.nuance.model;
 
-import java.sql.Timestamp;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,64 +19,88 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="order_id")
-    private long orderId;
-    @Column(name="user_id")
-    private long userId; 
+    private Long id;
+
+    @Column(name = "user_id", nullable = false)  // Store user ID directly
+    private Long userId;
+
     @Column(name="total_amount")
-    private double totalAmount; 
-    @Column(name="status")
-    private String status;
-    @Column(name="order_date")
-    private Timestamp orderDate;
+    private BigDecimal totalAmount;
     
-    public Order() {
-		super();
+    @Column(name="order_date")
+    private LocalDateTime orderDate;
+
+    public LocalDateTime getOrderDate() {
+		return orderDate;
 	}
 
-	public long getOrderId() {
-        return orderId;
+	public void setOrderDate(LocalDateTime orderDate) {
+		this.orderDate = orderDate;
+	}
+
+	@CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @Column(name="deleted_at")
+    private LocalDateTime deletedAt;
+
+    public Order() {}
+
+    public Long getId() {
+        return id;
     }
 
-    public void setOrderId(long orderId) {
-        this.orderId = orderId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
-    public double getTotalAmount() {
+    public BigDecimal getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(double totalAmount) {
+    public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
     }
 
-    public String getStatus() {
-        return status;
-    }
+    public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
 
-    public Timestamp getOrderDate() {
-        return orderDate;
-    }
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
 
-    public void setOrderDate(Timestamp orderDate) {
-        this.orderDate = orderDate;
-    }
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
+	}
 
-    @Override
+	public LocalDateTime getDeletedAt() {
+		return deletedAt;
+	}
+
+	public void setDeletedAt(LocalDateTime deletedAt) {
+		this.deletedAt = deletedAt;
+	}
+
+	@Override
     public String toString() {
-        return "Order [orderId=" + orderId + ", userId=" + userId + ", totalAmount=" + totalAmount + ", status="
-                + status + ", orderDate=" + orderDate + "]";
+        return "Order [id=" + id + ", userId=" + userId + ", totalAmount=" + totalAmount + "]";
     }
 }

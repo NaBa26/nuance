@@ -1,5 +1,6 @@
 package com.ecommerce.nuance.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +13,9 @@ import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 @Entity
 @Table(name="carts")
 public class Cart {
@@ -20,20 +24,27 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int quantity;
+    private Integer quantity;
 
     private BigDecimal subtotal;
 
-    @ManyToOne(fetch = FetchType.LAZY) // Add the relationship
+    @ManyToOne(fetch = FetchType.EAGER) // Add the relationship
     @JoinColumn(name = "book_id", referencedColumnName = "id") // Use the actual entity's ID as the foreign key
     private Book book;
     
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+    
+    @Column(name="deleted_at")
     private LocalDateTime deletedAt;
 
     // Getters and setters
@@ -49,7 +60,7 @@ public class Cart {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 

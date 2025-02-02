@@ -38,7 +38,7 @@ public class BookController {
 	    public ResponseEntity<Book> getBookById(@PathVariable String bookName, @RequestParam("id") String bookId) {
 	        try {
 	            Optional<Book> bookOptional = bookService.getBookById(Integer.parseInt(bookId));
-
+	            
 	            if (bookOptional.isPresent()) {
 	                return ResponseEntity.ok(bookOptional.get());
 	            } else {

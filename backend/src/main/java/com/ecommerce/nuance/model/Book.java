@@ -24,13 +24,13 @@ public class Book {
 	The GenerationType.IDENTITY strategy is commonly used with databases that supports auto incrementing*/
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) 
-	private long id;
+	private Long id;
 	private String name;
 	private String image;
 	private String author;
 	private String isbn;
 	private BigDecimal price;
-	private int quantity;
+	private Integer quantity;
 	private String genre;
 	
 	@Column(name="date_published")
@@ -44,7 +44,7 @@ public class Book {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 	
-	public Book(long id, String name, String image, String author, String isbn, BigDecimal price, int quantity, String genre, LocalDate datePublished) {
+	public Book(Long id, String name, String image, String author, String isbn, BigDecimal price, Integer quantity, String genre, LocalDate datePublished) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -71,7 +71,7 @@ public class Book {
 	public long getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getName() {
@@ -107,7 +107,7 @@ public class Book {
 	public int getQuantity() {
 		return quantity;
 	}
-	public void setQuantity(int quantity) {
+	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
 	public String getGenre() {
